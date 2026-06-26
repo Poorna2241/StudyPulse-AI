@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Primary brand colors -->
+    <color name="primary">#1565C0</color>
+    <color name="primary_dark">#0D47A1</color>
+    <color name="primary_light">#E3F2FD</color>
+    <color name="accent">#00BCD4</color>
+
+    <!-- Backgrounds -->
+    <color name="background">#F4F6FA</color>
+    <color name="surface">#FFFFFF</color>
+    <color name="card_bg">#FFFFFF</color>
+
+    <!-- Text -->
+    <color name="text_primary">#0D2137</color>
+    <color name="text_secondary">#546E7A</color>
+    <color name="text_on_primary">#FFFFFF</color>
+
+    <!-- Status colors -->
+    <color name="correct">#2E7D32</color>
+    <color name="incorrect">#C62828</color>
+    <color name="warning">#E65100</color>
+
+    <!-- Soft UI Tints -->
+    <color name="soft_blue">#E3F2FD</color>
+    <color name="soft_cyan">#E0F7FA</color>
+    <color name="soft_green">#E8F5E9</color>
+    <color name="soft_orange">#FFF3E0</color>
+    <color name="divider">#ECEFF1</color>
+
+    <!-- Background Gradient -->
+    <color name="bg_gradient_start">#C4C1F0</color>
+    <color name="bg_gradient_center">#B4AEEC</color>
+    <color name="bg_gradient_end">#A6A0E7</color>
+    <!-- Aurora Dream Gradient Colors -->
+    <color name="aurora_base_start">#F7EAFF</color>
+    <color name="aurora_base_end">#FDE2EA</color>
+    <color name="aurora_purple">#80AF6DFF</color>
+    <color name="aurora_pink">#73FF64B4</color>
+    <color name="aurora_yellow">#6DFFEBAA</color>
+    <color name="aurora_blue">#7AB8BEFF</color>
+</resources>
