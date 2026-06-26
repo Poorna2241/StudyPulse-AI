@@ -1,0 +1,19 @@
+<resources>
+    <style name="Theme.StudyPulseAI" parent="Theme.Material3.Light.NoActionBar">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorOnPrimary">@color/text_on_primary</item>
+        <item name="colorSecondary">@color/accent</item>
+        <item name="android:colorBackground">@color/background</item>
+        <item name="colorSurface">@color/surface</item>
+        <!-- Font family Poppins will be added later if files are provided -->
+        <!-- <item name="android:fontFamily">@font/poppins</item> -->
+    </style>
+
+    <style name="ShapeAppearance.StudyPulseAI.HeaderImage" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopLeft">0dp</item>
+        <item name="cornerSizeTopRight">0dp</item>
+        <item name="cornerSizeBottomLeft">0dp</item>
+        <item name="cornerSizeBottomRight">80dp</item>
+    </style>
+</resources>

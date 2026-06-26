@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">StudyPulse AI</string>
+    <string name="progress_title">Your Progress</string>
+    <string name="progress_subtitle">Keep up the great work!</string>
+    <string name="cards_studied_label">Cards Studied</string>
+    <string name="avg_score_label">Avg Score</string>
+    <string name="streak_label">7 Day Streak!</string>
+    <string name="recent_quizzes">Recent Quizzes</string>
+    <string name="placeholder_42">42</string>
+    <string name="placeholder_85">85%</string>
+    <string name="emoji_fire">🔥</string>
+    <string name="welcome_student">Welcome back, Student!</string>
+    <string name="conquering_today">What are we conquering today?</string>
+    <string name="my_decks">My Decks</string>
+    <string name="emoji_books">📚</string>
+    <string name="no_decks_message">No decks yet. Tap + to create one!</string>
+    <string name="content_desc_new_deck_header">New Deck Illustration</string>
+    <string name="content_desc_progress_header">Progress Illustration</string>
+    <string name="greeting_template">Hello, %s!</string>
+    <string name="default_user_name">Student</string>
+    <string name="label_select_generation_type">Select Generation Type</string>
+    <string name="mode_flashcards">Flashcards</string>
+    <string name="mode_quiz">Quiz</string>
+    <string name="label_number_of_flashcards">Number of Flashcards</string>
+    <string name="label_number_of_questions">Number of Questions</string>
+    <string name="btn_generate_flashcards">✨  Generate Flashcards</string>
+    <string name="btn_generate_quiz">✨  Generate Quiz</string>
+    <string name="unit_cards">cards</string>
+    <string name="unit_questions">questions</string>
+</resources>
