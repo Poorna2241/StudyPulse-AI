@@ -74,4 +74,22 @@
     <string name="axis_30">30</string>
     <string name="axis_0_num">0</string>
     <string name="mastery_percentage_template">%1$d%%</string>
+    <string name="action_delete">Delete</string>
+    <string name="confirm_delete_deck">Are you sure you want to delete this deck?</string>
+    <!-- Settings Strings -->
+    <string name="section_account">Account Management</string>
+    <string name="section_smart_student">Smart Student (AI Tailoring)</string>
+    <string name="section_preferences">App Preferences</string>
+    <string name="section_danger_zone">Danger Zone</string>
+    <string name="label_edit_profile">Edit Profile Name</string>
+    <string name="label_change_password">Change Password</string>
+    <string name="label_academic_level">Academic Level</string>
+    <string name="label_primary_subjects">Primary Subjects / Modules</string>
+    <string name="label_study_goal">Daily Study Goal (minutes)</string>
+    <string name="label_reminders">Study Reminders</string>
+    <string name="label_dark_mode">Dark Mode</string>
+    <string name="label_delete_account">Delete Account</string>
+    <string name="hint_subjects">e.g. Computer Science, Law, Medicine</string>
+    <string name="btn_save_settings">Save Preferences</string>
+    <string name="sign_out">Sign Out</string>
 </resources>

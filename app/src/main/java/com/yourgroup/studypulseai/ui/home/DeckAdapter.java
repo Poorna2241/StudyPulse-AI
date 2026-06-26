@@ -24,6 +24,7 @@ public class DeckAdapter extends RecyclerView.Adapter<DeckAdapter.DeckViewHolder
     public interface OnDeckClickListener {
         void onStudyClick(Deck deck);
         void onQuizClick(Deck deck);
+        void onDeleteClick(Deck deck);
     }
 
     public DeckAdapter(OnDeckClickListener listener) {
@@ -74,6 +75,7 @@ public class DeckAdapter extends RecyclerView.Adapter<DeckAdapter.DeckViewHolder
 
         holder.btnStudy.setOnClickListener(v -> listener.onStudyClick(deck));
         holder.btnQuiz.setOnClickListener(v -> listener.onQuizClick(deck));
+        holder.btnDelete.setOnClickListener(v -> listener.onDeleteClick(deck));
     }
 
     @Override
@@ -84,7 +86,7 @@ public class DeckAdapter extends RecyclerView.Adapter<DeckAdapter.DeckViewHolder
     static class DeckViewHolder extends RecyclerView.ViewHolder {
         TextView tvTitle, tvCount;
         ImageView ivBackground;
-        View btnStudy, btnQuiz;
+        View btnStudy, btnQuiz, btnDelete;
 
         public DeckViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -93,6 +95,7 @@ public class DeckAdapter extends RecyclerView.Adapter<DeckAdapter.DeckViewHolder
             ivBackground = itemView.findViewById(R.id.ivDeckBackground);
             btnStudy = itemView.findViewById(R.id.btnStudy);
             btnQuiz = itemView.findViewById(R.id.btnQuiz);
+            btnDelete = itemView.findViewById(R.id.btnDelete);
         }
     }
 }

@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -49,6 +50,9 @@ public class HomeFragment extends Fragment {
         adapter = new DeckAdapter(new DeckAdapter.OnDeckClickListener() {
             @Override public void onStudyClick(Deck deck) { /* Navigate to Study */ }
             @Override public void onQuizClick(Deck deck) { /* Navigate to Quiz */ }
+            @Override public void onDeleteClick(Deck deck) {
+                showDeleteConfirmation(deck);
+            }
         });
         rvDecks.setLayoutManager(new LinearLayoutManager(getContext()));
         rvDecks.setAdapter(adapter);
@@ -94,5 +98,41 @@ public class HomeFragment extends Fragment {
                 return false;
             }
         });
+    }
+
+    private void showDeleteConfirmation(Deck deck) {
+        new AlertDialog.Builder(requireContext())
+                .setTitle(R.string.action_delete)
+                .setMessage(R.string.confirm_delete_deck)
+                .setPositiveButton(android.R.string.ok, (dialog, which) -> deleteDeck(deck))
+                .setNegativeButton(android.R.string.cancel, null)
+                .show();
+    }
+
+    private void deleteDeck(Deck deck) {
+        new Thread(() -> {
+            com.yourgroup.studypulseai.data.db.AppDatabase.getInstance(requireContext())
+                    .deckDao().deleteDeck(deck.getId());
+            
+            // Reload decks on UI thread
+            requireActivity().runOnUiThread(this::loadDecks);
+        }).start();
+    }
+
+    private void loadDecks() {
+        new Thread(() -> {
+            List<Deck> decks = com.yourgroup.studypulseai.data.db.AppDatabase.getInstance(requireContext())
+                    .deckDao().getAllDecks();
+            requireActivity().runOnUiThread(() -> {
+                adapter.setDecks(decks);
+                if (decks.isEmpty()) {
+                    emptyState.setVisibility(View.VISIBLE);
+                    rvDecks.setVisibility(View.GONE);
+                } else {
+                    emptyState.setVisibility(View.GONE);
+                    rvDecks.setVisibility(View.VISIBLE);
+                }
+            });
+        }).start();
     }
 }
