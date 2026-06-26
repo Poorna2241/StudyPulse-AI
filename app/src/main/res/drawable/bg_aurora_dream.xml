@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Base Linear Gradient -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:angle="270"
+                android:startColor="@color/aurora_base_start"
+                android:endColor="@color/aurora_base_end" />
+        </shape>
+    </item>
+
+    <!-- Blue Glow (Bottom Layer of accents) -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:type="radial"
+                android:centerX="0.5"
+                android:centerY="0.6"
+                android:gradientRadius="350dp"
+                android:startColor="@color/aurora_blue"
+                android:endColor="@android:color/transparent" />
+        </shape>
+    </item>
+
+    <!-- Yellow Glow -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:type="radial"
+                android:centerX="0.6"
+                android:centerY="0.65"
+                android:gradientRadius="300dp"
+                android:startColor="@color/aurora_yellow"
+                android:endColor="@android:color/transparent" />
+        </shape>
+    </item>
+
+    <!-- Pink Glow -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:type="radial"
+                android:centerX="0.2"
+                android:centerY="0.8"
+                android:gradientRadius="350dp"
+                android:startColor="@color/aurora_pink"
+                android:endColor="@android:color/transparent" />
+        </shape>
+    </item>
+
+    <!-- Purple Glow (Top Layer) -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:type="radial"
+                android:centerX="0.6"
+                android:centerY="0.2"
+                android:gradientRadius="400dp"
+                android:startColor="@color/aurora_purple"
+                android:endColor="@android:color/transparent" />
+        </shape>
+    </item>
+</layer-list>

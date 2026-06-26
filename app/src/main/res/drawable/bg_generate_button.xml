@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- The rotating gradient border -->
+    <item android:id="@+id/borderLayer" android:drawable="@drawable/bg_rotating_border_gradient" />
+
+    <!-- The button core (solid color) -->
+    <item
+        android:bottom="2dp"
+        android:left="2dp"
+        android:right="2dp"
+        android:top="2dp">
+        <shape android:shape="rectangle">
+            <corners android:radius="12dp" />
+            <solid android:color="#1A0B4B" /> <!-- Deep dark purple to make border pop -->
+        </shape>
+    </item>
+
+    <!-- Ripple for feedback -->
+    <item>
+        <ripple android:color="#40FFFFFF">
+            <item>
+                <shape android:shape="rectangle">
+                    <corners android:radius="12dp" />
+                </shape>
+            </item>
+        </ripple>
+    </item>
+</layer-list>
