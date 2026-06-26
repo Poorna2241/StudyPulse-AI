@@ -33,7 +33,10 @@ public class StudyFragment extends Fragment {
 
         tvCardContent.setText(dummyQuestion);
 
-        flashCard.setOnClickListener(v -> flipCard());
+        flashCard.setOnClickListener(v -> {
+            flipCard();
+            com.yourgroup.studypulseai.util.ProgressManager.recordAction(requireContext());
+        });
 
         return view;
     }

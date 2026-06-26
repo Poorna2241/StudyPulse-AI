@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Basic Colors -->
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+
     <!-- Primary brand colors -->
     <color name="primary">#1565C0</color>
     <color name="primary_dark">#0D47A1</color>
@@ -27,6 +31,15 @@
     <color name="soft_green">#E8F5E9</color>
     <color name="soft_orange">#FFF3E0</color>
     <color name="divider">#ECEFF1</color>
+
+    <!-- Retention States -->
+    <color name="mastered_green">#4CAF50</color>
+    <color name="learning_yellow">#FFC107</color>
+    <color name="struggling_red">#F44336</color>
+
+    <!-- AI Pulse -->
+    <color name="ai_pulse_bg">#F3E5F5</color>
+    <color name="ai_pulse_accent">#7B1FA2</color>
 
     <!-- Background Gradient -->
     <color name="bg_gradient_start">#C4C1F0</color>

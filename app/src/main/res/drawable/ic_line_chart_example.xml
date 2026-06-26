@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="100dp"
+    android:viewportWidth="200"
+    android:viewportHeight="100">
+    <!-- Grid lines -->
+    <path
+        android:pathData="M0,20 L200,20 M0,40 L200,40 M0,60 L200,60 M0,80 L200,80"
+        android:strokeWidth="0.5"
+        android:strokeColor="#DDDDDD" />
+
+    <!-- Target goal line (Simulated dashed line using multiple segments) -->
+    <path
+        android:pathData="M0,25 L5,25 M10,25 L15,25 M20,25 L25,25 M30,25 L35,25 M40,25 L45,25 M50,25 L55,25 M60,25 L65,25 M70,25 L75,25 M80,25 L85,25 M90,25 L95,25 M100,25 L105,25 M110,25 L115,25 M120,25 L125,25 M130,25 L135,25 M140,25 L145,25 M150,25 L155,25 M160,25 L165,25 M170,25 L175,25 M180,25 L185,25 M190,25 L195,25"
+        android:strokeWidth="1"
+        android:strokeColor="@color/accent" />
+
+    <!-- Performance Line -->
+    <path
+        android:pathData="M10,80 L40,60 L70,75 L100,40 L130,50 L160,20 L190,30"
+        android:strokeWidth="3"
+        android:strokeColor="@color/primary"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+</vector>

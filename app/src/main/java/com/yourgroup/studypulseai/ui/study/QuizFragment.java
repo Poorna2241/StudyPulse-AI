@@ -48,8 +48,10 @@ public class QuizFragment extends Fragment {
                 Toast.makeText(getContext(), "Please select an answer", Toast.LENGTH_SHORT).show();
             } else if (checkedId == R.id.optionB) {
                 Toast.makeText(getContext(), "Correct!", Toast.LENGTH_SHORT).show();
+                com.yourgroup.studypulseai.util.ProgressManager.recordQuizResult(requireContext(), 0, 100);
             } else {
                 Toast.makeText(getContext(), "Incorrect. Try again!", Toast.LENGTH_SHORT).show();
+                com.yourgroup.studypulseai.util.ProgressManager.recordQuizResult(requireContext(), 0, 0);
             }
         });
 

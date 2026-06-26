@@ -10,6 +10,9 @@ public class Flashcard {
     private int deckId;
     private String question;
     private String answer;
+    
+    // 0: Struggling, 1: Learning, 2: Mastered
+    private int masteryLevel = 1; 
 
     public Flashcard(String question, String answer) {
         this.question = question;
@@ -22,4 +25,9 @@ public class Flashcard {
     public void setDeckId(int deckId) { this.deckId = deckId; }
     public String getQuestion() { return question; }
     public String getAnswer() { return answer; }
+    public void setQuestion(String question) { this.question = question; }
+    public void setAnswer(String answer) { this.answer = answer; }
+    
+    public int getMasteryLevel() { return masteryLevel; }
+    public void setMasteryLevel(int masteryLevel) { this.masteryLevel = masteryLevel; }
 }
