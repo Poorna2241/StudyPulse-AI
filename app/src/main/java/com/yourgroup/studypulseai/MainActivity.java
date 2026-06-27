@@ -11,7 +11,7 @@ import androidx.navigation.ui.NavigationUI;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.yourgroup.studypulseai.ui.auth.LoginActivity;
+import com.yourgroup.studypulseai.ui.auth.WelcomeActivity;
 import androidx.core.view.WindowCompat;
 import android.graphics.Color;
 
@@ -25,10 +25,10 @@ public class MainActivity extends AppCompatActivity {
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         getWindow().setStatusBarColor(Color.TRANSPARENT);
 
-        // Redirect to login if not signed in
+        // Redirect to Welcome if not signed in
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user == null) {
-            startActivity(new Intent(this, LoginActivity.class));
+            startActivity(new Intent(this, WelcomeActivity.class));
             finish();
             return;
         }
