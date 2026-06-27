@@ -24,7 +24,7 @@
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/bg_aurora_dream" />
+                android:background="@drawable/bg_header_gradient" />
 
         </com.google.android.material.card.MaterialCardView>
 
