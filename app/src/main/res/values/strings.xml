@@ -92,4 +92,10 @@
     <string name="hint_subjects">e.g. Computer Science, Law, Medicine</string>
     <string name="btn_save_settings">Save Preferences</string>
     <string name="sign_out">Sign Out</string>
+    <string name="new_deck_header_title">Create a New Deck</string>
+    <string name="new_deck_header_subtitle">Turn your notes into smart flashcards and quizzes.</string>
+    <string name="progress_header_title">Your Learning Journey</string>
+    <string name="progress_header_subtitle">Every study session brings you one step closer to mastery.</string>
+    <string name="settings_header_title">Make StudyPulse Yours</string>
+    <string name="settings_header_subtitle">Personalize your learning experience.</string>
 </resources>
