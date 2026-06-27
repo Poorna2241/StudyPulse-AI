@@ -20,10 +20,12 @@ import com.yourgroup.studypulseai.R;
 import com.yourgroup.studypulseai.data.model.Deck;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Random;
 
 public class HomeFragment extends Fragment {
-    private TextView tvGreeting;
+    private TextView tvGreeting, tvSubtitle;
     private RecyclerView rvDecks;
     private View emptyState;
     private DeckAdapter adapter;
@@ -35,6 +37,7 @@ public class HomeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
         tvGreeting = view.findViewById(R.id.tvGreeting);
+        tvSubtitle = view.findViewById(R.id.tvSubtitle);
         rvDecks = view.findViewById(R.id.rvDecks);
         emptyState = view.findViewById(R.id.emptyState);
         searchViewDecks = view.findViewById(R.id.searchViewDecks);
@@ -75,13 +78,38 @@ public class HomeFragment extends Fragment {
 
     private void updateUserGreeting() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String name = getString(R.string.default_user_name);
         if (user != null) {
-            String name = user.getDisplayName();
-            if (name == null || name.isEmpty()) {
-                name = getString(R.string.default_user_name);
+            String displayName = user.getDisplayName();
+            if (displayName != null && !displayName.isEmpty()) {
+                name = displayName;
             }
-            tvGreeting.setText(getString(R.string.greeting_template, name));
         }
+
+        int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+        String greeting;
+        String subtitle;
+
+        if (hour >= 5 && hour < 12) {
+            greeting = getString(R.string.greeting_morning, name);
+            subtitle = getString(R.string.subtitle_morning);
+        } else if (hour >= 12 && hour < 17) {
+            greeting = getString(R.string.greeting_afternoon, name);
+            subtitle = getString(R.string.subtitle_afternoon);
+        } else if (hour >= 17 && hour < 21) {
+            greeting = getString(R.string.greeting_evening, name);
+            subtitle = getString(R.string.subtitle_evening);
+        } else {
+            // Random motivational greeting for night or general use
+            int random = new Random().nextInt(3) + 1;
+            int greetingId = getResources().getIdentifier("greeting_motivational_" + random, "string", requireContext().getPackageName());
+            int subtitleId = getResources().getIdentifier("subtitle_motivational_" + random, "string", requireContext().getPackageName());
+            greeting = getString(greetingId, name);
+            subtitle = getString(subtitleId);
+        }
+
+        tvGreeting.setText(greeting);
+        tvSubtitle.setText(subtitle);
     }
 
     private void setupSearchView() {

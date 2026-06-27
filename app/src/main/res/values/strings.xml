@@ -98,4 +98,19 @@
     <string name="progress_header_subtitle">Every study session brings you one step closer to mastery.</string>
     <string name="settings_header_title">Make StudyPulse Yours</string>
     <string name="settings_header_subtitle">Personalize your learning experience.</string>
+    <!-- Time-based Greetings -->
+    <string name="greeting_morning">Good Morning, %s! ☀️</string>
+    <string name="greeting_afternoon">Good Afternoon, %s! 👋</string>
+    <string name="greeting_evening">Good Evening, %s! 🌙</string>
+    <string name="greeting_motivational_1">Hello, %s! 🚀</string>
+    <string name="greeting_motivational_2">Welcome Back, %s! 💜</string>
+    <string name="greeting_motivational_3">Ready to Learn, %s? 📖</string>
+
+    <!-- Subtitle Variations -->
+    <string name="subtitle_morning">Ready to make today productive?</string>
+    <string name="subtitle_afternoon">Let\'s keep the momentum going.</string>
+    <string name="subtitle_evening">Time for one more great study session.</string>
+    <string name="subtitle_motivational_1">Every card you review gets you closer to success.</string>
+    <string name="subtitle_motivational_2">Let\'s turn today\'s effort into tomorrow\'s achievement.</string>
+    <string name="subtitle_motivational_3">Your next breakthrough starts here.</string>
 </resources>
