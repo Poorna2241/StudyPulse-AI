@@ -16,4 +16,17 @@
         <item name="cornerSizeBottomLeft">0dp</item>
         <item name="cornerSizeBottomRight">80dp</item>
     </style>
+
+    <!-- Modern Slider Style (Perfect Circular Thumb) -->
+    <style name="Widget.StudyPulseAI.Slider" parent="Widget.Material3.Slider">
+        <item name="trackHeight">4dp</item>
+        <item name="thumbRadius">10dp</item>
+        <item name="thumbColor">@color/primary</item>
+        <item name="thumbStrokeWidth">2dp</item>
+        <item name="thumbStrokeColor">@color/white</item>
+        <item name="trackColorActive">@color/primary</item>
+        <item name="trackColorInactive">#33000000</item>
+        <item name="labelBehavior">gone</item>
+        <item name="haloColor">@android:color/transparent</item>
+    </style>
 </resources>

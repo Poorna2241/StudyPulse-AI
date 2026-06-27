@@ -102,9 +102,7 @@ public class NewDeckFragment extends Fragment {
         });
 
         sliderCount.addOnChangeListener((slider, value, fromUser) -> {
-            String unit = chipGroupMode.getCheckedChipId() == R.id.chipFlashcards ? 
-                getString(R.string.unit_cards) : getString(R.string.unit_questions);
-            tvSliderValue.setText((int) value + " " + unit);
+            tvSliderValue.setText(String.valueOf((int) value));
         });
 
         chipGroupMode.setOnCheckedStateChangeListener((group, checkedIds) -> {
@@ -113,11 +111,11 @@ public class NewDeckFragment extends Fragment {
                 if (id == R.id.chipFlashcards) {
                     tvSliderLabel.setText(R.string.label_number_of_flashcards);
                     btnGenerate.setText(R.string.btn_generate_flashcards);
-                    tvSliderValue.setText((int) sliderCount.getValue() + " " + getString(R.string.unit_cards));
+                    tvSliderValue.setText(String.valueOf((int) sliderCount.getValue()));
                 } else {
                     tvSliderLabel.setText(R.string.label_number_of_questions);
                     btnGenerate.setText(R.string.btn_generate_quiz);
-                    tvSliderValue.setText((int) sliderCount.getValue() + " " + getString(R.string.unit_questions));
+                    tvSliderValue.setText(String.valueOf((int) sliderCount.getValue()));
                 }
             }
         });

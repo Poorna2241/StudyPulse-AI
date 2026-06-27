@@ -32,6 +32,7 @@ public class SettingsFragment extends Fragment {
     private MaterialButton btnEditProfile, btnChangePassword, btnSignOut, btnDeleteAccount;
     private AutoCompleteTextView spinnerAcademicLevel;
     private TextInputEditText etPrimarySubjects;
+    private TextView tvStudyGoalValue;
     private Slider sliderStudyGoal;
     private MaterialSwitch switchReminders, switchDarkMode;
     
@@ -62,6 +63,7 @@ public class SettingsFragment extends Fragment {
         btnDeleteAccount = v.findViewById(R.id.btnDeleteAccount);
         spinnerAcademicLevel = v.findViewById(R.id.spinnerAcademicLevel);
         etPrimarySubjects = v.findViewById(R.id.etPrimarySubjects);
+        tvStudyGoalValue = v.findViewById(R.id.tvStudyGoalValue);
         sliderStudyGoal = v.findViewById(R.id.sliderStudyGoal);
         switchReminders = v.findViewById(R.id.switchReminders);
         switchDarkMode = v.findViewById(R.id.switchDarkMode);
@@ -84,7 +86,9 @@ public class SettingsFragment extends Fragment {
     private void loadPreferences() {
         spinnerAcademicLevel.setText(prefs.getString("academic_level", "University"), false);
         etPrimarySubjects.setText(prefs.getString("primary_subjects", ""));
-        sliderStudyGoal.setValue(prefs.getFloat("study_goal", 30f));
+        float goal = prefs.getFloat("study_goal", 30f);
+        sliderStudyGoal.setValue(goal);
+        tvStudyGoalValue.setText(String.valueOf((int) goal));
         switchReminders.setChecked(prefs.getBoolean("reminders_enabled", true));
         switchDarkMode.setChecked(prefs.getBoolean("dark_mode", false));
     }
@@ -111,8 +115,10 @@ public class SettingsFragment extends Fragment {
         });
 
         // Save AI settings when they change
-        sliderStudyGoal.addOnChangeListener((slider, value, fromUser) -> 
-            prefs.edit().putFloat("study_goal", value).apply());
+        sliderStudyGoal.addOnChangeListener((slider, value, fromUser) -> {
+            prefs.edit().putFloat("study_goal", value).apply();
+            tvStudyGoalValue.setText(String.valueOf((int) value));
+        });
 
         switchReminders.setOnCheckedChangeListener((button, isChecked) -> 
             prefs.edit().putBoolean("reminders_enabled", isChecked).apply());

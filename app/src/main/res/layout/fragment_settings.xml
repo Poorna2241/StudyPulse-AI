@@ -215,18 +215,38 @@
                             android:hint="@string/hint_subjects" />
                     </com.google.android.material.textfield.TextInputLayout>
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <!-- Daily Study Goal Section with Side-by-Side Label & Value -->
+                    <RelativeLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="4dp"
-                        android:text="@string/label_study_goal"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="12sp" />
+                        android:layout_marginBottom="4dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:text="@string/label_study_goal"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:id="@+id/tvStudyGoalValue"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:text="30"
+                            android:textColor="@color/text_primary"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
+
+                    </RelativeLayout>
 
                     <com.google.android.material.slider.Slider
                         android:id="@+id/sliderStudyGoal"
+                        style="@style/Widget.StudyPulseAI.Slider"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        app:thumbIcon="@drawable/slider_thumb_circle"
                         android:stepSize="5"
                         android:value="30"
                         android:valueFrom="0"
