@@ -12,19 +12,16 @@
     <color name="card_bg">#2C2C2C</color>
 
     <!-- Text -->
-    <!-- We keep text_primary and text_secondary similar to light mode for specific sections
-         or use dedicated static colors for those charts.
-         However, the user wants them to stay as they were in light mode for specific sections. -->
     <color name="text_primary">#FFFFFF</color>
     <color name="text_secondary">#B0BEC5</color>
     <color name="text_on_primary">#000000</color>
 
-    <!-- Static Colors for persistent visibility (same as light mode) -->
-    <color name="static_text_primary">#0D2137</color>
-    <color name="static_text_secondary">#546E7A</color>
+    <!-- Static Colors (Restored to Dark Mode values) -->
+    <color name="static_text_primary">#FFFFFF</color>
+    <color name="static_text_secondary">#B0BEC5</color>
 
     <!-- AI Pulse -->
-    <color name="ai_pulse_bg">#2D1A47</color>
+    <color name="ai_pulse_bg">#371F62</color>
     <color name="ai_pulse_accent">#B39DDB</color>
 
     <!-- Divider & Soft UI -->

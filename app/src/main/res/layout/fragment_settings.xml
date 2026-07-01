@@ -137,7 +137,8 @@
                         android:text="@string/label_edit_profile"
                         android:textColor="@color/primary"
                         app:icon="@drawable/ic_search"
-                        app:iconTint="@color/primary" />
+                        app:iconTint="@color/primary"
+                        app:strokeColor="#FAF8F8" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnChangePassword"
@@ -246,11 +247,14 @@
                         style="@style/Widget.StudyPulseAI.Slider"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:thumbIcon="@drawable/slider_thumb_circle"
                         android:stepSize="5"
                         android:value="30"
                         android:valueFrom="0"
-                        android:valueTo="120" />
+                        android:valueTo="120"
+                        app:thumbElevation="7dp"
+                        app:thumbIcon="@drawable/slider_thumb_state_list"
+                        app:thumbStrokeColor="#F2EFEF"
+                        app:thumbStrokeWidth="3dp" />
 
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>

@@ -92,6 +92,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:background="@color/bg_gradient_start"
                         android:gravity="center"
                         android:orientation="vertical">
 
@@ -106,7 +107,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/placeholder_streak_count"
-                            android:textColor="@color/warning"
+                            android:textColor="@color/aurora_base_end"
                             android:textSize="24sp"
                             android:textStyle="bold" />
 
@@ -114,9 +115,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/streak_label_simple"
+                            android:textAllCaps="true"
                             android:textColor="@color/text_secondary"
-                            android:textSize="11sp"
-                            android:textAllCaps="true"/>
+                            android:textSize="11sp" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
@@ -134,6 +135,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:background="@color/soft_blue"
                         android:gravity="center"
                         android:orientation="vertical">
 
@@ -142,7 +144,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/placeholder_mastery_percent"
-                            android:textColor="@color/correct"
+                            android:textColor="@color/primary"
                             android:textSize="24sp"
                             android:textStyle="bold" />
 
@@ -150,9 +152,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/total_mastery_label"
+                            android:textAllCaps="true"
                             android:textColor="@color/text_secondary"
-                            android:textSize="11sp"
-                            android:textAllCaps="true"/>
+                            android:textSize="11sp" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
@@ -170,6 +172,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:background="@color/soft_blue"
                         android:gravity="center"
                         android:orientation="vertical">
 
@@ -186,9 +189,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/cards_flipped_label"
+                            android:textAllCaps="true"
                             android:textColor="@color/text_secondary"
-                            android:textSize="11sp"
-                            android:textAllCaps="true"/>
+                            android:textSize="11sp" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
@@ -206,6 +209,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:background="@color/bg_gradient_start"
                         android:gravity="center"
                         android:orientation="vertical">
 
@@ -214,7 +218,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/placeholder_quizzes_count"
-                            android:textColor="@color/accent"
+                            android:textColor="@color/aurora_base_start"
                             android:textSize="24sp"
                             android:textStyle="bold" />
 
@@ -222,9 +226,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/quizzes_taken_label"
+                            android:textAllCaps="true"
                             android:textColor="@color/text_secondary"
-                            android:textSize="11sp"
-                            android:textAllCaps="true"/>
+                            android:textSize="11sp" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
             </GridLayout>
@@ -246,6 +250,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="@color/bg_gradient_start"
                     android:orientation="vertical"
                     android:padding="20dp">
 
@@ -268,18 +273,20 @@
                         <FrameLayout
                             android:layout_width="140dp"
                             android:layout_height="140dp">
+
                             <View
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:background="@drawable/ic_donut_example" />
+
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
                                 android:text="@string/placeholder_mastery_percent"
+                                android:textColor="@color/text_primary"
                                 android:textSize="20sp"
-                                android:textStyle="bold"
-                                android:textColor="@color/text_primary"/>
+                                android:textStyle="bold" />
                         </FrameLayout>
 
                         <LinearLayout
@@ -293,8 +300,19 @@
                                 android:layout_height="wrap_content"
                                 android:gravity="center_vertical"
                                 android:orientation="horizontal">
-                                <View android:layout_width="12dp" android:layout_height="12dp" android:background="@color/struggling_red" />
-                                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="8dp" android:text="@string/struggling_label" android:textSize="12sp" android:textColor="@color/static_text_secondary"/>
+
+                                <View
+                                    android:layout_width="12dp"
+                                    android:layout_height="12dp"
+                                    android:background="@color/struggling_red" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="8dp"
+                                    android:text="@string/struggling_label"
+                                    android:textColor="@color/static_text_secondary"
+                                    android:textSize="12sp" />
                             </LinearLayout>
 
                             <LinearLayout
@@ -303,8 +321,19 @@
                                 android:layout_marginTop="8dp"
                                 android:gravity="center_vertical"
                                 android:orientation="horizontal">
-                                <View android:layout_width="12dp" android:layout_height="12dp" android:background="@color/learning_yellow" />
-                                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="8dp" android:text="@string/learning_label" android:textSize="12sp" android:textColor="@color/static_text_secondary"/>
+
+                                <View
+                                    android:layout_width="12dp"
+                                    android:layout_height="12dp"
+                                    android:background="@color/learning_yellow" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="8dp"
+                                    android:text="@string/learning_label"
+                                    android:textColor="@color/static_text_secondary"
+                                    android:textSize="12sp" />
                             </LinearLayout>
 
                             <LinearLayout
@@ -313,8 +342,19 @@
                                 android:layout_marginTop="8dp"
                                 android:gravity="center_vertical"
                                 android:orientation="horizontal">
-                                <View android:layout_width="12dp" android:layout_height="12dp" android:background="@color/mastered_green" />
-                                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="8dp" android:text="@string/mastered_label" android:textSize="12sp" android:textColor="@color/static_text_secondary"/>
+
+                                <View
+                                    android:layout_width="12dp"
+                                    android:layout_height="12dp"
+                                    android:background="@color/mastered_green" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="8dp"
+                                    android:text="@string/mastered_label"
+                                    android:textColor="@color/static_text_secondary"
+                                    android:textSize="12sp" />
                             </LinearLayout>
                         </LinearLayout>
                     </LinearLayout>
@@ -336,12 +376,14 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="@color/soft_blue"
                     android:orientation="vertical"
                     android:padding="20dp">
 
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -357,19 +399,21 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
                             app:singleSelection="true">
+
                             <com.google.android.material.chip.Chip
                                 style="@style/Widget.Material3.Chip.Filter"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/filter_all"
                                 android:checked="true"
-                                android:textSize="11sp"/>
+                                android:text="@string/filter_all"
+                                android:textSize="11sp" />
+
                             <com.google.android.material.chip.Chip
                                 style="@style/Widget.Material3.Chip.Filter"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/filter_software"
-                                android:textSize="11sp"/>
+                                android:textSize="11sp" />
                         </com.google.android.material.chip.ChipGroup>
                     </RelativeLayout>
 
@@ -385,9 +429,33 @@
                             android:layout_height="match_parent"
                             android:gravity="end"
                             android:orientation="vertical">
-                            <TextView android:layout_width="wrap_content" android:layout_height="0dp" android:layout_weight="1" android:text="@string/axis_100" android:textSize="11sp" android:textColor="@color/static_text_secondary" android:gravity="top"/>
-                            <TextView android:layout_width="wrap_content" android:layout_height="0dp" android:layout_weight="1" android:text="@string/axis_50" android:textSize="11sp" android:textColor="@color/static_text_secondary" android:gravity="center_vertical"/>
-                            <TextView android:layout_width="wrap_content" android:layout_height="0dp" android:layout_weight="1" android:text="@string/axis_0" android:textSize="11sp" android:textColor="@color/static_text_secondary" android:gravity="bottom"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="0dp"
+                                android:layout_weight="1"
+                                android:gravity="top"
+                                android:text="@string/axis_100"
+                                android:textColor="@color/static_text_secondary"
+                                android:textSize="11sp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="0dp"
+                                android:layout_weight="1"
+                                android:gravity="center_vertical"
+                                android:text="@string/axis_50"
+                                android:textColor="@color/static_text_secondary"
+                                android:textSize="11sp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="0dp"
+                                android:layout_weight="1"
+                                android:gravity="bottom"
+                                android:text="@string/axis_0"
+                                android:textColor="@color/static_text_secondary"
+                                android:textSize="11sp" />
                         </LinearLayout>
 
                         <!-- Example Line Chart -->
@@ -403,16 +471,72 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
+                        android:orientation="horizontal"
                         android:paddingStart="32dp"
-                        android:paddingEnd="0dp"
-                        android:orientation="horizontal">
-                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/day_mon_full" android:textSize="11sp" android:gravity="center" android:textColor="@color/static_text_secondary"/>
-                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/day_tue_full" android:textSize="11sp" android:gravity="center" android:textColor="@color/static_text_secondary"/>
-                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/day_wed_full" android:textSize="11sp" android:gravity="center" android:textColor="@color/static_text_secondary"/>
-                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/day_thu_full" android:textSize="11sp" android:gravity="center" android:textColor="@color/static_text_secondary"/>
-                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/day_fri_full" android:textSize="11sp" android:gravity="center" android:textColor="@color/static_text_secondary"/>
-                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/day_sat_full" android:textSize="11sp" android:gravity="center" android:textColor="@color/static_text_secondary"/>
-                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/day_sun_full" android:textSize="11sp" android:gravity="center" android:textColor="@color/static_text_secondary"/>
+                        android:paddingEnd="0dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="@string/day_mon_full"
+                            android:textColor="@color/static_text_secondary"
+                            android:textSize="11sp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="@string/day_tue_full"
+                            android:textColor="@color/static_text_secondary"
+                            android:textSize="11sp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="@string/day_wed_full"
+                            android:textColor="@color/static_text_secondary"
+                            android:textSize="11sp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="@string/day_thu_full"
+                            android:textColor="@color/static_text_secondary"
+                            android:textSize="11sp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="@string/day_fri_full"
+                            android:textColor="@color/static_text_secondary"
+                            android:textSize="11sp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="@string/day_sat_full"
+                            android:textColor="@color/static_text_secondary"
+                            android:textSize="11sp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="@string/day_sun_full"
+                            android:textColor="@color/static_text_secondary"
+                            android:textSize="11sp" />
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -432,6 +556,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="@color/bg_gradient_start"
                     android:orientation="vertical"
                     android:padding="20dp">
 
@@ -456,9 +581,33 @@
                             android:gravity="end"
                             android:orientation="vertical"
                             android:paddingBottom="24dp">
-                            <TextView android:layout_width="wrap_content" android:layout_height="0dp" android:layout_weight="1" android:text="@string/axis_60" android:textSize="11sp" android:textColor="@color/static_text_secondary" android:gravity="top"/>
-                            <TextView android:layout_width="wrap_content" android:layout_height="0dp" android:layout_weight="1" android:text="@string/axis_30" android:textSize="11sp" android:textColor="@color/static_text_secondary" android:gravity="center_vertical"/>
-                            <TextView android:layout_width="wrap_content" android:layout_height="0dp" android:layout_weight="1" android:text="@string/axis_0_num" android:textSize="11sp" android:textColor="@color/static_text_secondary" android:gravity="bottom"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="0dp"
+                                android:layout_weight="1"
+                                android:gravity="top"
+                                android:text="@string/axis_60"
+                                android:textColor="@color/static_text_secondary"
+                                android:textSize="11sp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="0dp"
+                                android:layout_weight="1"
+                                android:gravity="center_vertical"
+                                android:text="@string/axis_30"
+                                android:textColor="@color/static_text_secondary"
+                                android:textSize="11sp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="0dp"
+                                android:layout_weight="1"
+                                android:gravity="bottom"
+                                android:text="@string/axis_0_num"
+                                android:textColor="@color/static_text_secondary"
+                                android:textSize="11sp" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -474,13 +623,54 @@
                                 android:gravity="bottom"
                                 android:orientation="horizontal">
 
-                                <View android:layout_width="0dp" android:layout_height="40dp" android:layout_weight="1" android:layout_margin="4dp" android:background="@color/primary"/>
-                                <View android:layout_width="0dp" android:layout_height="70dp" android:layout_weight="1" android:layout_margin="4dp" android:background="@color/primary"/>
-                                <View android:layout_width="0dp" android:layout_height="90dp" android:layout_weight="1" android:layout_margin="4dp" android:background="@color/primary"/>
-                                <View android:layout_width="0dp" android:layout_height="50dp" android:layout_weight="1" android:layout_margin="4dp" android:background="@color/primary"/>
-                                <View android:layout_width="0dp" android:layout_height="110dp" android:layout_weight="1" android:layout_margin="4dp" android:background="@color/primary"/>
-                                <View android:layout_width="0dp" android:layout_height="80dp" android:layout_weight="1" android:layout_margin="4dp" android:background="@color/primary"/>
-                                <View android:layout_width="0dp" android:layout_height="30dp" android:layout_weight="1" android:layout_margin="4dp" android:background="@color/primary"/>
+                                <View
+                                    android:layout_width="0dp"
+                                    android:layout_height="40dp"
+                                    android:layout_margin="4dp"
+                                    android:layout_weight="1"
+                                    android:background="@color/primary" />
+
+                                <View
+                                    android:layout_width="0dp"
+                                    android:layout_height="70dp"
+                                    android:layout_margin="4dp"
+                                    android:layout_weight="1"
+                                    android:background="@color/primary" />
+
+                                <View
+                                    android:layout_width="0dp"
+                                    android:layout_height="90dp"
+                                    android:layout_margin="4dp"
+                                    android:layout_weight="1"
+                                    android:background="@color/primary" />
+
+                                <View
+                                    android:layout_width="0dp"
+                                    android:layout_height="50dp"
+                                    android:layout_margin="4dp"
+                                    android:layout_weight="1"
+                                    android:background="@color/primary" />
+
+                                <View
+                                    android:layout_width="0dp"
+                                    android:layout_height="110dp"
+                                    android:layout_margin="4dp"
+                                    android:layout_weight="1"
+                                    android:background="@color/primary" />
+
+                                <View
+                                    android:layout_width="0dp"
+                                    android:layout_height="80dp"
+                                    android:layout_margin="4dp"
+                                    android:layout_weight="1"
+                                    android:background="@color/primary" />
+
+                                <View
+                                    android:layout_width="0dp"
+                                    android:layout_height="30dp"
+                                    android:layout_margin="4dp"
+                                    android:layout_weight="1"
+                                    android:background="@color/primary" />
                             </LinearLayout>
 
                             <!-- Horizontal Axis Labels -->
@@ -489,23 +679,87 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="8dp"
                                 android:orientation="horizontal">
-                                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/day_mon" android:textSize="11sp" android:gravity="center" android:textColor="@color/static_text_secondary" android:textStyle="bold"/>
-                                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/day_tue" android:textSize="11sp" android:gravity="center" android:textColor="@color/static_text_secondary" android:textStyle="bold"/>
-                                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/day_wed" android:textSize="11sp" android:gravity="center" android:textColor="@color/static_text_secondary" android:textStyle="bold"/>
-                                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/day_thu" android:textSize="11sp" android:gravity="center" android:textColor="@color/static_text_secondary" android:textStyle="bold"/>
-                                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/day_fri" android:textSize="11sp" android:gravity="center" android:textColor="@color/static_text_secondary" android:textStyle="bold"/>
-                                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/day_sat" android:textSize="11sp" android:gravity="center" android:textColor="@color/static_text_secondary" android:textStyle="bold"/>
-                                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/day_sun" android:textSize="11sp" android:gravity="center" android:textColor="@color/static_text_secondary" android:textStyle="bold"/>
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:gravity="center"
+                                    android:text="@string/day_mon"
+                                    android:textColor="@color/static_text_secondary"
+                                    android:textSize="11sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:gravity="center"
+                                    android:text="@string/day_tue"
+                                    android:textColor="@color/static_text_secondary"
+                                    android:textSize="11sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:gravity="center"
+                                    android:text="@string/day_wed"
+                                    android:textColor="@color/static_text_secondary"
+                                    android:textSize="11sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:gravity="center"
+                                    android:text="@string/day_thu"
+                                    android:textColor="@color/static_text_secondary"
+                                    android:textSize="11sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:gravity="center"
+                                    android:text="@string/day_fri"
+                                    android:textColor="@color/static_text_secondary"
+                                    android:textSize="11sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:gravity="center"
+                                    android:text="@string/day_sat"
+                                    android:textColor="@color/static_text_secondary"
+                                    android:textSize="11sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:gravity="center"
+                                    android:text="@string/day_sun"
+                                    android:textColor="@color/static_text_secondary"
+                                    android:textSize="11sp"
+                                    android:textStyle="bold" />
                             </LinearLayout>
                         </LinearLayout>
                     </LinearLayout>
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="end"
                         android:text="@string/label_mins"
-                        android:textSize="11sp"
                         android:textColor="@color/static_text_secondary"
+                        android:textSize="11sp"
                         android:textStyle="italic" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -526,6 +780,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="@color/soft_blue"
                     android:orientation="vertical"
                     android:padding="20dp">
 
@@ -552,8 +807,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
                         android:text="@string/btn_refresher"
-                        app:backgroundTint="@color/ai_pulse_accent"
-                        android:textColor="@color/white" />
+                        android:textColor="@color/white"
+                        app:backgroundTint="@color/ai_pulse_accent" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 

@@ -241,11 +241,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                app:thumbIcon="@drawable/slider_thumb_circle"
                 android:stepSize="5"
                 android:value="10"
                 android:valueFrom="5"
-                android:valueTo="30" />
+                android:valueTo="30"
+                app:thumbElevation="7dp"
+                app:thumbIcon="@drawable/slider_thumb_state_list"
+                app:thumbStrokeColor="#FBFBFB"
+                app:thumbStrokeWidth="3dp" />
 
             <!-- Generate Button -->
             <com.google.android.material.button.MaterialButton
