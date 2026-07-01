@@ -23,8 +23,8 @@
     <string name="mode_quiz">Quiz</string>
     <string name="label_number_of_flashcards">Number of Flashcards</string>
     <string name="label_number_of_questions">Number of Questions</string>
-    <string name="btn_generate_flashcards">✨  Generate Flashcards</string>
-    <string name="btn_generate_quiz">✨  Generate Quiz</string>
+    <string name="btn_generate_flashcards">Generate Flashcards</string>
+    <string name="btn_generate_quiz">Generate Quiz</string>
     <string name="unit_cards">cards</string>
     <string name="unit_questions">questions</string>
     <string name="streak_label_simple">Day Streak</string>
@@ -99,12 +99,12 @@
     <string name="settings_header_title">Make StudyPulse Yours</string>
     <string name="settings_header_subtitle">Personalize your learning experience.</string>
     <!-- Time-based Greetings -->
-    <string name="greeting_morning">Good Morning, %s! ☀️</string>
-    <string name="greeting_afternoon">Good Afternoon, %s! 👋</string>
-    <string name="greeting_evening">Good Evening, %s! 🌙</string>
-    <string name="greeting_motivational_1">Hello, %s! 🚀</string>
-    <string name="greeting_motivational_2">Welcome Back, %s! 💜</string>
-    <string name="greeting_motivational_3">Ready to Learn, %s? 📖</string>
+    <string name="greeting_morning">Good Morning, %s!</string>
+    <string name="greeting_afternoon">Good Afternoon, %s!</string>
+    <string name="greeting_evening">Good Evening, %s!</string>
+    <string name="greeting_motivational_1">Hello, %s!</string>
+    <string name="greeting_motivational_2">Welcome Back, %s!</string>
+    <string name="greeting_motivational_3">Ready to Learn, %s?</string>
 
     <!-- Subtitle Variations -->
     <string name="subtitle_morning">Ready to make today productive?</string>

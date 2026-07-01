@@ -20,6 +20,10 @@
     <color name="text_secondary">#546E7A</color>
     <color name="text_on_primary">#FFFFFF</color>
 
+    <!-- Static Colors for persistent visibility (always same as light mode) -->
+    <color name="static_text_primary">#0D2137</color>
+    <color name="static_text_secondary">#546E7A</color>
+
     <!-- Status colors -->
     <color name="correct">#2E7D32</color>
     <color name="incorrect">#C62828</color>
