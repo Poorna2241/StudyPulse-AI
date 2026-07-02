@@ -7,7 +7,7 @@
     <!-- Primary brand colors -->
     <color name="primary">#1565C0</color>
     <color name="primary_dark">#0D47A1</color>
-    <color name="primary_light">#E3F2FD</color>
+    <color name="primary_light">@color/soft_blue</color>
     <color name="accent">#00BCD4</color>
 
     <!-- Backgrounds -->
@@ -31,9 +31,9 @@
 
     <!-- Soft UI Tints -->
     <color name="soft_blue">#E3F2FD</color>
-    <color name="soft_cyan">#E0F7FA</color>
-    <color name="soft_green">#E8F5E9</color>
-    <color name="soft_orange">#FFF3E0</color>
+    <color name="soft_cyan">@color/bg_gradient_start</color>
+    <color name="soft_green">@color/soft_blue</color>
+    <color name="soft_orange">@color/bg_gradient_start</color>
     <color name="divider">#ECEFF1</color>
 
     <!-- Retention States -->
