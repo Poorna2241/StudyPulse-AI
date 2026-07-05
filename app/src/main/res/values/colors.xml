@@ -15,6 +15,11 @@
     <color name="surface">#FFFFFF</color>
     <color name="card_bg">#FFFFFF</color>
 
+    <!-- Section Backgrounds (Light Mode) -->
+    <color name="bg_mastery_card">#FFFFFF</color>
+    <color name="bg_performance_card">#FFFFFF</color>
+    <color name="bg_weekly_pulse_card">#FFFFFF</color>
+
     <!-- Text -->
     <color name="text_primary">#0D2137</color>
     <color name="text_secondary">#546E7A</color>
