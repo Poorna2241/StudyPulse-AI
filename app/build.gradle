@@ -1,0 +1,76 @@
+plugins {
+    alias(libs.plugins.android.application)
+    id 'com.google.gms.google-services'
+}
+
+android {
+    namespace 'com.yourgroup.studypulseai'
+    compileSdk 36
+
+    defaultConfig {
+        applicationId "com.yourgroup.studypulseai"
+        minSdk 26
+        targetSdk 36
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField "String", "ANTHROPIC_API_KEY", "\"${project.findProperty('ANTHROPIC_API_KEY')}\""
+    }
+
+    buildFeatures {
+        buildConfig true
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+}
+
+dependencies {
+    implementation libs.activity.ktx
+    implementation libs.appcompat
+    implementation libs.constraintlayout
+    implementation libs.material
+    implementation libs.navigation.runtime
+    testImplementation libs.junit
+    androidTestImplementation libs.espresso.core
+    androidTestImplementation libs.ext.junit
+
+    // Navigation Component
+    implementation 'androidx.navigation:navigation-fragment:2.7.7'
+    implementation 'androidx.navigation:navigation-ui:2.7.7'
+
+    // Firebase (Auth + Firestore)
+    implementation platform('com.google.firebase:firebase-bom:33.1.0')
+    implementation 'com.google.firebase:firebase-auth'
+    implementation 'com.google.firebase:firebase-firestore'
+
+    // Room Database (local storage)
+    implementation 'androidx.room:room-runtime:2.6.1'
+    annotationProcessor 'androidx.room:room-compiler:2.6.1'
+
+    // OkHttp (for Anthropic API calls)
+    implementation 'com.squareup.okhttp3:okhttp:4.12.0'
+
+    // Gson (JSON parsing)
+    implementation 'com.google.code.gson:gson:2.10.1'
+
+    // PDF text extraction
+    implementation 'com.tom-roush:pdfbox-android:2.0.27.0'
+
+    // DOCX text extraction (Apache POI)
+    implementation 'org.apache.poi:poi-ooxml:5.2.5'
+
+    // Glide (for image loading if needed)
+    implementation 'com.github.bumptech.glide:glide:4.16.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.16.0'
+}

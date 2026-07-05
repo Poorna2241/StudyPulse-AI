@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="400dp"
+    android:height="300dp"
+    android:viewportWidth="400"
+    android:viewportHeight="300">
+
+    <!-- Top Layer Wave (Lighter/Primary Gradient) -->
+    <path
+        android:pathData="M0,100 C100,50 200,150 400,100 L400,300 L0,300 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:startX="0"
+                android:startY="100"
+                android:endX="400"
+                android:endY="100"
+                android:type="linear">
+                <item android:offset="0" android:color="#2C7AFC" />
+                <item android:offset="0.5" android:color="#6668FE" />
+                <item android:offset="1" android:color="#A22CFD" />
+            </gradient>
+        </aapt:attr>
+    </path>
+
+    <!-- Bottom Layer Wave (Darker/Secondary Gradient) -->
+    <path
+        android:fillAlpha="0.3"
+        android:pathData="M0,130 C150,80 250,180 400,130 L400,300 L0,300 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:startX="0"
+                android:startY="130"
+                android:endX="400"
+                android:endY="130"
+                android:type="linear">
+                <item android:offset="0" android:color="#1A5BCB" />
+                <item android:offset="0.5" android:color="#4A4BE5" />
+                <item android:offset="1" android:color="#7F19CB" />
+            </gradient>
+        </aapt:attr>
+    </path>
+</vector>

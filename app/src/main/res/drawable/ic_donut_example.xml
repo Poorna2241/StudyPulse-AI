@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="140dp"
+    android:height="140dp"
+    android:viewportWidth="100"
+    android:viewportHeight="100">
+
+    <!-- Background circle -->
+    <path
+        android:pathData="M50,10 A40,40 0 1,1 49.9,10"
+        android:strokeWidth="12"
+        android:strokeColor="#F0F0F0" />
+
+    <!-- Struggling (Red) - 30% (from 0 to 108 degrees) -->
+    <path
+        android:pathData="M50,10 A40,40 0 0,1 88.04,62.36"
+        android:strokeWidth="12"
+        android:strokeColor="@color/struggling_red" />
+
+    <!-- Learning (Yellow) - 40% (from 108 to 252 degrees) -->
+    <path
+        android:pathData="M88.04,62.36 A40,40 0 0,1 11.96,62.36"
+        android:strokeWidth="12"
+        android:strokeColor="@color/learning_yellow" />
+
+    <!-- Mastered (Green) - 30% (from 252 to 360 degrees) -->
+    <path
+        android:pathData="M11.96,62.36 A40,40 0 0,1 50,10"
+        android:strokeWidth="12"
+        android:strokeColor="@color/mastered_green" />
+</vector>

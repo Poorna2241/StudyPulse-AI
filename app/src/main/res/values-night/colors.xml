@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Dark Mode Primary Colors -->
+    <color name="primary">#90CAF9</color>
+    <color name="primary_dark">#42A5F5</color>
+    <color name="primary_light">#1E2A3A</color>
+    <color name="accent">#4DD0E1</color>
+
+    <!-- Backgrounds -->
+    <color name="background">#121212</color>
+    <color name="surface">#1E1E1E</color>
+    <color name="card_bg">#2C2C2C</color>
+
+    <!-- Section Backgrounds (Dark Mode - keeping previous values) -->
+    <color name="bg_mastery_card">#1E1E1E</color>
+    <color name="bg_performance_card">#1E1E1E</color>
+    <color name="bg_weekly_pulse_card">#1E1E1E</color>
+
+    <!-- Text -->
+    <color name="text_primary">#FFFFFF</color>
+    <color name="text_secondary">#B0BEC5</color>
+    <color name="text_on_primary">#000000</color>
+
+    <!-- Static Colors (Restored to Dark Mode values) -->
+    <color name="static_text_primary">#FFFFFF</color>
+    <color name="static_text_secondary">#B0BEC5</color>
+
+    <!-- AI Pulse -->
+    <color name="ai_pulse_bg">#371F62</color>
+    <color name="ai_pulse_accent">#B39DDB</color>
+
+    <!-- Divider & Soft UI -->
+    <color name="divider">#33FFFFFF</color>
+    <color name="soft_blue">#192E54</color>
+    <color name="soft_cyan">#371F62</color>
+    <color name="soft_green">#192E54</color>
+    <color name="soft_orange">#371F62</color>
+</resources>

@@ -1,0 +1,31 @@
+<resources>
+    <style name="Theme.StudyPulseAI" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorOnPrimary">@color/text_on_primary</item>
+        <item name="colorSecondary">@color/accent</item>
+        <item name="android:colorBackground">@color/background</item>
+        <item name="colorSurface">@color/surface</item>
+        <!-- Font family Poppins will be added later if files are provided -->
+        <!-- <item name="android:fontFamily">@font/poppins</item> -->
+    </style>
+
+    <style name="ShapeAppearance.StudyPulseAI.HeaderImage" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopLeft">0dp</item>
+        <item name="cornerSizeTopRight">0dp</item>
+        <item name="cornerSizeBottomLeft">0dp</item>
+        <item name="cornerSizeBottomRight">80dp</item>
+    </style>
+
+    <!-- Premium Slider Style: Fixed size thumb and Gradient Track -->
+    <style name="Widget.StudyPulseAI.Slider" parent="Widget.Material3.Slider">
+        <item name="trackHeight">10dp</item>
+        <item name="thumbRadius">12dp</item>
+        <item name="thumbWidth">24dp</item>
+        <item name="thumbHeight">24dp</item>
+        <item name="trackColorInactive">#EEEEEE</item>
+        <item name="labelBehavior">gone</item>
+        <item name="haloColor">@android:color/transparent</item>
+        <item name="haloRadius">0dp</item>
+    </style>
+</resources>

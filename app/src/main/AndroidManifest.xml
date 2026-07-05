@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Internet for API calls and Firebase -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <!-- File access for PDF/TXT/DOCX picker -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+
+    <application
+        android:name=".StudyPulseApp"
+        android:allowBackup="true"
+        android:icon="@drawable/brain"
+        android:label="StudyPulse AI"
+        android:roundIcon="@drawable/brain"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.StudyPulseAI"
+        android:usesCleartextTraffic="false">
+
+        <!-- Launcher Activity (MainActivity handles auth redirection) -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".ui.auth.LoginActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.auth.RegisterActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.auth.WelcomeActivity"
+            android:exported="false" />
+
+    </application>
+
+</manifest>
