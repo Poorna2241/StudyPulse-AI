@@ -14,10 +14,14 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.yourgroup.studypulseai.R;
+import com.yourgroup.studypulseai.data.db.AppDatabase;
 import com.yourgroup.studypulseai.data.model.Deck;
+import com.yourgroup.studypulseai.network.SupabaseAuthHelper;
+import androidx.navigation.Navigation;
+
+
+import androidx.navigation.Navigation;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -45,44 +49,42 @@ public class HomeFragment extends Fragment {
         setupRecyclerView();
         updateUserGreeting();
         setupSearchView();
+        
+        loadDecks(); // Load from Room
 
         return view;
     }
 
     private void setupRecyclerView() {
         adapter = new DeckAdapter(new DeckAdapter.OnDeckClickListener() {
-            @Override public void onStudyClick(Deck deck) { /* Navigate to Study */ }
-            @Override public void onQuizClick(Deck deck) { /* Navigate to Quiz */ }
+            @Override public void onStudyClick(Deck deck) {
+                Bundle args = new Bundle();
+                args.putInt("deckId", deck.getId());
+                args.putString("deckTitle", deck.getTitle());
+                Navigation.findNavController(requireView()).navigate(R.id.studyFragment, args);
+            }
+            @Override public void onQuizClick(Deck deck) {
+                Bundle args = new Bundle();
+                args.putInt("deckId", deck.getId());
+                args.putString("deckTitle", deck.getTitle());
+                Navigation.findNavController(requireView()).navigate(R.id.quizFragment, args);
+            }
             @Override public void onDeleteClick(Deck deck) {
                 showDeleteConfirmation(deck);
             }
         });
         rvDecks.setLayoutManager(new LinearLayoutManager(getContext()));
         rvDecks.setAdapter(adapter);
-
-        // Dummy data for visual verification
-        List<Deck> dummyDecks = new ArrayList<>();
-        dummyDecks.add(new Deck("Photosynthesis", "c1"));
-        dummyDecks.add(new Deck("Quantum Physics", "c2"));
-        dummyDecks.add(new Deck("Ancient History", "c3"));
-        adapter.setDecks(dummyDecks);
-
-        if (dummyDecks.isEmpty()) {
-            emptyState.setVisibility(View.VISIBLE);
-            rvDecks.setVisibility(View.GONE);
-        } else {
-            emptyState.setVisibility(View.GONE);
-            rvDecks.setVisibility(View.VISIBLE);
-        }
     }
 
     private void updateUserGreeting() {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        String name = getString(R.string.default_user_name);
-        if (user != null) {
-            String displayName = user.getDisplayName();
-            if (displayName != null && !displayName.isEmpty()) {
-                name = displayName;
+        String name = SupabaseAuthHelper.getCurrentUserName();
+        if (name == null || name.trim().isEmpty() || "null".equalsIgnoreCase(name)) {
+            name = SupabaseAuthHelper.getCurrentUserEmail();
+            if (name == null) {
+                name = getString(R.string.default_user_name);
+            } else if (name.contains("@")) {
+                name = name.split("@")[0];
             }
         }
 
@@ -139,7 +141,7 @@ public class HomeFragment extends Fragment {
 
     private void deleteDeck(Deck deck) {
         new Thread(() -> {
-            com.yourgroup.studypulseai.data.db.AppDatabase.getInstance(requireContext())
+            AppDatabase.getInstance(requireContext())
                     .deckDao().deleteDeck(deck.getId());
             
             // Reload decks on UI thread
@@ -149,10 +151,14 @@ public class HomeFragment extends Fragment {
 
     private void loadDecks() {
         new Thread(() -> {
-            List<Deck> decks = com.yourgroup.studypulseai.data.db.AppDatabase.getInstance(requireContext())
+            List<Deck> decks = AppDatabase.getInstance(requireContext())
                     .deckDao().getAllDecks();
+            java.util.Map<Integer, Integer> counts = new java.util.HashMap<>();
+            for (Deck d : decks) {
+                counts.put(d.getId(), AppDatabase.getInstance(requireContext()).deckDao().getFlashcardCount(d.getId()));
+            }
             requireActivity().runOnUiThread(() -> {
-                adapter.setDecks(decks);
+                adapter.setDecks(decks, counts);
                 if (decks.isEmpty()) {
                     emptyState.setVisibility(View.VISIBLE);
                     rvDecks.setVisibility(View.GONE);

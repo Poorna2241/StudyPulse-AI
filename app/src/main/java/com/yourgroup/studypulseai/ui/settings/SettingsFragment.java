@@ -22,19 +22,19 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.materialswitch.MaterialSwitch;
 import com.google.android.material.slider.Slider;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.yourgroup.studypulseai.R;
+import com.yourgroup.studypulseai.network.SupabaseAuthHelper;
 import com.yourgroup.studypulseai.ui.auth.LoginActivity;
 
 public class SettingsFragment extends Fragment {
-    private TextView tvUserName, tvUserEmail;
+    private TextView tvUserName, tvUserEmail, tvDarkModeLabel;
     private MaterialButton btnEditProfile, btnChangePassword, btnSignOut, btnDeleteAccount;
     private AutoCompleteTextView spinnerAcademicLevel;
     private TextInputEditText etPrimarySubjects;
     private TextView tvStudyGoalValue;
     private Slider sliderStudyGoal;
     private MaterialSwitch switchReminders, switchDarkMode;
+    private View rowReminders, rowDarkMode;
     
     private SharedPreferences prefs;
 
@@ -57,6 +57,7 @@ public class SettingsFragment extends Fragment {
     private void initViews(View v) {
         tvUserName = v.findViewById(R.id.tvUserName);
         tvUserEmail = v.findViewById(R.id.tvUserEmail);
+        tvDarkModeLabel = v.findViewById(R.id.tvDarkModeLabel);
         btnEditProfile = v.findViewById(R.id.btnEditProfile);
         btnChangePassword = v.findViewById(R.id.btnChangePassword);
         btnSignOut = v.findViewById(R.id.btnSignOut);
@@ -67,13 +68,20 @@ public class SettingsFragment extends Fragment {
         sliderStudyGoal = v.findViewById(R.id.sliderStudyGoal);
         switchReminders = v.findViewById(R.id.switchReminders);
         switchDarkMode = v.findViewById(R.id.switchDarkMode);
+        rowReminders = v.findViewById(R.id.rowReminders);
+        rowDarkMode = v.findViewById(R.id.rowDarkMode);
     }
 
     private void setupUserData() {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) {
-            tvUserName.setText(user.getDisplayName() != null ? user.getDisplayName() : getString(R.string.default_user_name));
-            tvUserEmail.setText(user.getEmail());
+        String email = SupabaseAuthHelper.getCurrentUserEmail();
+        String name = SupabaseAuthHelper.getCurrentUserName();
+        
+        if (email != null) {
+            if (name == null || name.isEmpty() || name.equals("null")) {
+                name = email.contains("@") ? email.split("@")[0] : email;
+            }
+            tvUserName.setText(name);
+            tvUserEmail.setText(email);
         }
     }
 
@@ -90,29 +98,37 @@ public class SettingsFragment extends Fragment {
         sliderStudyGoal.setValue(goal);
         tvStudyGoalValue.setText(String.valueOf((int) goal));
         switchReminders.setChecked(prefs.getBoolean("reminders_enabled", true));
-        switchDarkMode.setChecked(prefs.getBoolean("dark_mode", false));
+        boolean isDark = prefs.getBoolean("dark_mode", false);
+        switchDarkMode.setChecked(isDark);
+        tvDarkModeLabel.setText(isDark ? "Light Mode" : "Dark Mode");
     }
 
     private void setupListeners() {
+        btnEditProfile.setOnClickListener(v -> showEditProfileDialog());
+        btnChangePassword.setOnClickListener(v -> showChangePasswordDialog());
         btnSignOut.setOnClickListener(v -> signOut());
         
         btnDeleteAccount.setOnClickListener(v -> {
             new AlertDialog.Builder(requireContext())
                 .setTitle("Delete Account")
                 .setMessage("Are you sure? This cannot be undone.")
-                .setPositiveButton("Delete", (dialog, which) -> {
-                    // Logic to delete from Firebase...
-                    Toast.makeText(getContext(), "Account deletion initiated", Toast.LENGTH_SHORT).show();
-                })
+                .setPositiveButton("Delete", (dialog, which) -> deleteUserAccount())
                 .setNegativeButton("Cancel", null)
                 .show();
         });
 
         switchDarkMode.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            prefs.edit().putBoolean("dark_mode", isChecked).apply();
-            AppCompatDelegate.setDefaultNightMode(isChecked ? 
-                AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO);
+            boolean current = prefs.getBoolean("dark_mode", false);
+            if (current != isChecked) {
+                prefs.edit().putBoolean("dark_mode", isChecked).apply();
+                tvDarkModeLabel.setText(isChecked ? "Light Mode" : "Dark Mode");
+                AppCompatDelegate.setDefaultNightMode(isChecked ? 
+                    AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO);
+            }
         });
+
+        rowDarkMode.setOnClickListener(v -> switchDarkMode.setChecked(!switchDarkMode.isChecked()));
+        rowReminders.setOnClickListener(v -> switchReminders.setChecked(!switchReminders.isChecked()));
 
         // Save AI settings when they change
         sliderStudyGoal.addOnChangeListener((slider, value, fromUser) -> {
@@ -122,6 +138,82 @@ public class SettingsFragment extends Fragment {
 
         switchReminders.setOnCheckedChangeListener((button, isChecked) -> 
             prefs.edit().putBoolean("reminders_enabled", isChecked).apply());
+    }
+
+    private void deleteUserAccount() {
+        new Thread(() -> {
+            try {
+                com.yourgroup.studypulseai.data.db.AppDatabase.getInstance(requireContext()).clearAllTables();
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        SupabaseAuthHelper.signOut(success -> {
+                            Toast.makeText(getContext(), "Account deleted successfully", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(getActivity(), LoginActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
+                            if (getActivity() != null) getActivity().finish();
+                        });
+                    });
+                }
+            } catch (Exception e) {
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        Toast.makeText(getContext(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    });
+                }
+            }
+        }).start();
+    }
+
+    private void showEditProfileDialog() {
+        TextInputEditText etNewName = new TextInputEditText(requireContext());
+        etNewName.setHint("Enter new name");
+        etNewName.setText(tvUserName.getText());
+
+        new AlertDialog.Builder(requireContext())
+            .setTitle("Edit Profile")
+            .setView(etNewName)
+            .setPositiveButton("Update", (dialog, which) -> {
+                String name = etNewName.getText().toString().trim();
+                if (!name.isEmpty()) {
+                    SupabaseAuthHelper.updateProfileName(name, (success, error) -> {
+                        if (success) {
+                            tvUserName.setText(name);
+                            Toast.makeText(getContext(), "Profile updated", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getContext(), "Error: " + error, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            })
+            .setNegativeButton("Cancel", null)
+            .show();
+    }
+
+    private void showChangePasswordDialog() {
+        TextInputEditText etNewPass = new TextInputEditText(requireContext());
+        etNewPass.setHint("Enter new password");
+        etNewPass.setInputType(android.text.InputType.TYPE_CLASS_TEXT | android.text.InputType.TYPE_TEXT_VARIATION_PASSWORD);
+
+        new AlertDialog.Builder(requireContext())
+            .setTitle("Change Password")
+            .setView(etNewPass)
+            .setPositiveButton("Change", (dialog, which) -> {
+                String pass = etNewPass.getText().toString().trim();
+                if (pass.length() >= 6) {
+                    SupabaseAuthHelper.changePassword(pass, (success, error) -> {
+                        if (success) {
+                            Toast.makeText(getContext(), "Password changed", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getContext(), "Error: " + error, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                } else {
+                    Toast.makeText(getContext(), "Password too short", Toast.LENGTH_SHORT).show();
+                }
+            })
+            .setNegativeButton("Cancel", null)
+            .show();
     }
 
     @Override
@@ -135,10 +227,11 @@ public class SettingsFragment extends Fragment {
     }
 
     private void signOut() {
-        FirebaseAuth.getInstance().signOut();
-        Intent intent = new Intent(getActivity(), LoginActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
-        if (getActivity() != null) getActivity().finish();
+        SupabaseAuthHelper.signOut(success -> {
+            Intent intent = new Intent(getActivity(), LoginActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            if (getActivity() != null) getActivity().finish();
+        });
     }
 }

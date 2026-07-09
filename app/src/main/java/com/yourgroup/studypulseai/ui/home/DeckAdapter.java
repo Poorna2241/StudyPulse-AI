@@ -19,6 +19,7 @@ import java.util.List;
 public class DeckAdapter extends RecyclerView.Adapter<DeckAdapter.DeckViewHolder> {
     private List<Deck> decks = new ArrayList<>();
     private List<Deck> decksFull = new ArrayList<>();
+    private java.util.Map<Integer, Integer> cardCounts = new java.util.HashMap<>();
     private final OnDeckClickListener listener;
 
     public interface OnDeckClickListener {
@@ -31,9 +32,10 @@ public class DeckAdapter extends RecyclerView.Adapter<DeckAdapter.DeckViewHolder
         this.listener = listener;
     }
 
-    public void setDecks(List<Deck> decks) {
+    public void setDecks(List<Deck> decks, java.util.Map<Integer, Integer> counts) {
         this.decks = new ArrayList<>(decks);
         this.decksFull = new ArrayList<>(decks);
+        this.cardCounts = counts != null ? counts : new java.util.HashMap<>();
         notifyDataSetChanged();
     }
 
@@ -63,7 +65,8 @@ public class DeckAdapter extends RecyclerView.Adapter<DeckAdapter.DeckViewHolder
     public void onBindViewHolder(@NonNull DeckViewHolder holder, int position) {
         Deck deck = decks.get(position);
         holder.tvTitle.setText(deck.getTitle());
-        holder.tvCount.setText("0 cards"); // Placeholder
+        int count = cardCounts.containsKey(deck.getId()) ? cardCounts.get(deck.getId()) : 0;
+        holder.tvCount.setText(count + (count == 1 ? " card" : " cards"));
 
         Context context = holder.itemView.getContext();
         int resId = context.getResources().getIdentifier(deck.getBackgroundImage(), "drawable", context.getPackageName());

@@ -4,17 +4,27 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 import com.yourgroup.studypulseai.data.db.Converters;
+import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 @Entity(tableName = "quiz_questions")
 @TypeConverters(Converters.class)
 public class QuizQuestion {
     @PrimaryKey(autoGenerate = true)
-    private int id;
-    private int deckId;
-    private String question;
-    private List<String> options;
-    private int correctIndex;
+    public int id;
+    public int deckId;
+    
+    @SerializedName("question")
+    public String question;
+    
+    @SerializedName("options")
+    public List<String> options;
+    
+    @SerializedName("correct_index")
+    public int correctIndex;
+
+    public QuizQuestion() {
+    }
 
     public QuizQuestion(String question, List<String> options, int correctIndex) {
         this.question = question;
@@ -27,6 +37,9 @@ public class QuizQuestion {
     public int getDeckId() { return deckId; }
     public void setDeckId(int deckId) { this.deckId = deckId; }
     public String getQuestion() { return question; }
+    public void setQuestion(String question) { this.question = question; }
     public List<String> getOptions() { return options; }
+    public void setOptions(List<String> options) { this.options = options; }
     public int getCorrectIndex() { return correctIndex; }
+    public void setCorrectIndex(int correctIndex) { this.correctIndex = correctIndex; }
 }

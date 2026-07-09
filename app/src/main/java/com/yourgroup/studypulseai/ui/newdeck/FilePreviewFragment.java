@@ -27,8 +27,10 @@ public class FilePreviewFragment extends Fragment {
         }
 
         view.findViewById(R.id.btnConfirm).setOnClickListener(v -> {
-            // Logic to confirm and go back to NewDeckFragment with the text
-            getParentFragmentManager().popBackStack();
+            Bundle result = new Bundle();
+            result.putString("confirmedText", tvExtractedText.getText().toString());
+            getParentFragmentManager().setFragmentResult("fileTextKey", result);
+            androidx.navigation.Navigation.findNavController(view).popBackStack();
         });
 
         return view;

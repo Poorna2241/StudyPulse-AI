@@ -9,12 +9,11 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.firebase.auth.FirebaseAuth;
 import com.yourgroup.studypulseai.MainActivity;
 import com.yourgroup.studypulseai.R;
+import com.yourgroup.studypulseai.network.SupabaseAuthHelper;
 
 public class LoginActivity extends AppCompatActivity {
-    private FirebaseAuth mAuth;
     private TextInputEditText etEmail, etPassword;
     private ProgressBar progressBar;
 
@@ -22,7 +21,6 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        mAuth = FirebaseAuth.getInstance();
 
         etEmail    = findViewById(R.id.etEmail);
         etPassword = findViewById(R.id.etPassword);
@@ -42,28 +40,20 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
         progressBar.setVisibility(View.VISIBLE);
-        mAuth.signInWithEmailAndPassword(email, pass)
-            .addOnCompleteListener(task -> {
-                progressBar.setVisibility(View.GONE);
-                if (task.isSuccessful()) {
-                    startActivity(new Intent(this, MainActivity.class));
-                    finish();
-                } else {
-                    Toast.makeText(this, "Login failed: " +
-                        task.getException().getMessage(), Toast.LENGTH_LONG).show();
-                }
-            });
+        
+        SupabaseAuthHelper.signIn(email, pass, (success, error) -> {
+            progressBar.setVisibility(View.GONE);
+            if (success) {
+                startActivity(new Intent(this, MainActivity.class));
+                finish();
+            } else {
+                Toast.makeText(this, "Login failed: " + error, Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     private void resetPassword() {
-        String email = etEmail.getText().toString().trim();
-        if (email.isEmpty()) {
-            Toast.makeText(this, "Enter your email first", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        mAuth.sendPasswordResetEmail(email)
-            .addOnCompleteListener(task -> Toast.makeText(this,
-                task.isSuccessful() ? "Reset email sent!" : "Failed to send email",
-                Toast.LENGTH_SHORT).show());
+        // Supabase password reset can be added later
+        Toast.makeText(this, "Reset password feature coming soon", Toast.LENGTH_SHORT).show();
     }
 }

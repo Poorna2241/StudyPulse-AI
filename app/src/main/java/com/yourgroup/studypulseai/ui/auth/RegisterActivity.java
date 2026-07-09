@@ -9,13 +9,11 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.UserProfileChangeRequest;
 import com.yourgroup.studypulseai.MainActivity;
 import com.yourgroup.studypulseai.R;
+import com.yourgroup.studypulseai.network.SupabaseAuthHelper;
 
 public class RegisterActivity extends AppCompatActivity {
-    private FirebaseAuth mAuth;
     private TextInputEditText etName, etEmail, etPassword, etConfirmPassword;
     private ProgressBar progressBar;
 
@@ -23,7 +21,6 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-        mAuth = FirebaseAuth.getInstance();
 
         etName = findViewById(R.id.etName);
         etEmail = findViewById(R.id.etEmail);
@@ -52,26 +49,17 @@ public class RegisterActivity extends AppCompatActivity {
         }
 
         progressBar.setVisibility(View.VISIBLE);
-        mAuth.createUserWithEmailAndPassword(email, pass)
-            .addOnCompleteListener(task -> {
-                progressBar.setVisibility(View.GONE);
-                if (task.isSuccessful()) {
-                    // Save display name
-                    UserProfileChangeRequest req = new UserProfileChangeRequest.Builder()
-                        .setDisplayName(name).build();
-                    if (mAuth.getCurrentUser() != null) {
-                        mAuth.getCurrentUser().updateProfile(req).addOnCompleteListener(updateTask -> {
-                            startActivity(new Intent(RegisterActivity.this, MainActivity.class));
-                            finish();
-                        });
-                    } else {
-                        startActivity(new Intent(RegisterActivity.this, MainActivity.class));
-                        finish();
-                    }
-                } else {
-                    Toast.makeText(this, "Registration failed: " +
-                        task.getException().getMessage(), Toast.LENGTH_LONG).show();
-                }
-            });
+        SupabaseAuthHelper.signUp(email, pass, name, (success, error) -> {
+            progressBar.setVisibility(View.GONE);
+            if (success) {
+                Toast.makeText(this, "Registration successful! Please check your email.", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                finish();
+            } else {
+                Toast.makeText(this, "Registration failed: " + error, Toast.LENGTH_LONG).show();
+            }
+        });
     }
 }

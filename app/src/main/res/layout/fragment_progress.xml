@@ -268,11 +268,12 @@
                         <FrameLayout
                             android:layout_width="140dp"
                             android:layout_height="140dp">
-                            <View
+                            <com.yourgroup.studypulseai.ui.progress.DonutChartView
+                                android:id="@+id/donutChartView"
                                 android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:background="@drawable/ic_donut_example" />
+                                android:layout_height="match_parent" />
                             <TextView
+                                android:id="@+id/tvDonutMasteryValue"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
@@ -358,14 +359,14 @@
                             android:layout_alignParentEnd="true"
                             app:singleSelection="true">
                             <com.google.android.material.chip.Chip
-                                style="@style/Widget.Material3.Chip.Filter"
+                                style="@style/Widget.MaterialComponents.Chip.Filter"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/filter_all"
                                 android:checked="true"
                                 android:textSize="11sp"/>
                             <com.google.android.material.chip.Chip
-                                style="@style/Widget.Material3.Chip.Filter"
+                                style="@style/Widget.MaterialComponents.Chip.Filter"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/filter_software"
@@ -391,11 +392,11 @@
                         </LinearLayout>
 
                         <!-- Example Line Chart -->
-                        <View
+                        <com.yourgroup.studypulseai.ui.progress.LineChartView
+                            android:id="@+id/lineChartView"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_marginStart="8dp"
-                            android:background="@drawable/ic_line_chart_example" />
+                            android:layout_marginStart="8dp" />
                     </LinearLayout>
 
                     <!-- Line Chart Labels (X-Axis) -->
@@ -474,13 +475,13 @@
                                 android:gravity="bottom"
                                 android:orientation="horizontal">
 
-                                <View android:layout_width="0dp" android:layout_height="40dp" android:layout_weight="1" android:layout_margin="4dp" android:background="@color/primary"/>
-                                <View android:layout_width="0dp" android:layout_height="70dp" android:layout_weight="1" android:layout_margin="4dp" android:background="@color/primary"/>
-                                <View android:layout_width="0dp" android:layout_height="90dp" android:layout_weight="1" android:layout_margin="4dp" android:background="@color/primary"/>
-                                <View android:layout_width="0dp" android:layout_height="50dp" android:layout_weight="1" android:layout_margin="4dp" android:background="@color/primary"/>
-                                <View android:layout_width="0dp" android:layout_height="110dp" android:layout_weight="1" android:layout_margin="4dp" android:background="@color/primary"/>
-                                <View android:layout_width="0dp" android:layout_height="80dp" android:layout_weight="1" android:layout_margin="4dp" android:background="@color/primary"/>
-                                <View android:layout_width="0dp" android:layout_height="30dp" android:layout_weight="1" android:layout_margin="4dp" android:background="@color/primary"/>
+                                <View android:id="@+id/barMon" android:layout_width="0dp" android:layout_height="0dp" android:layout_weight="1" android:layout_margin="4dp" android:background="@color/primary"/>
+                                <View android:id="@+id/barTue" android:layout_width="0dp" android:layout_height="0dp" android:layout_weight="1" android:layout_margin="4dp" android:background="@color/primary"/>
+                                <View android:id="@+id/barWed" android:layout_width="0dp" android:layout_height="0dp" android:layout_weight="1" android:layout_margin="4dp" android:background="@color/primary"/>
+                                <View android:id="@+id/barThu" android:layout_width="0dp" android:layout_height="0dp" android:layout_weight="1" android:layout_margin="4dp" android:background="@color/primary"/>
+                                <View android:id="@+id/barFri" android:layout_width="0dp" android:layout_height="0dp" android:layout_weight="1" android:layout_margin="4dp" android:background="@color/primary"/>
+                                <View android:id="@+id/barSat" android:layout_width="0dp" android:layout_height="0dp" android:layout_weight="1" android:layout_margin="4dp" android:background="@color/primary"/>
+                                <View android:id="@+id/barSun" android:layout_width="0dp" android:layout_height="0dp" android:layout_weight="1" android:layout_margin="4dp" android:background="@color/primary"/>
                             </LinearLayout>
 
                             <!-- Horizontal Axis Labels -->
@@ -547,7 +548,7 @@
 
                     <Button
                         android:id="@+id/btnRefresher"
-                        style="@style/Widget.Material3.Button.TonalButton"
+                        style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
@@ -588,13 +589,13 @@
                     android:orientation="horizontal"
                     android:padding="8dp">
                     <!-- Heatmap placeholder -->
-                    <View android:layout_width="24dp" android:layout_height="24dp" android:layout_margin="2dp" android:background="@color/soft_green"/>
-                    <View android:layout_width="24dp" android:layout_height="24dp" android:layout_margin="2dp" android:background="@color/mastered_green"/>
-                    <View android:layout_width="24dp" android:layout_height="24dp" android:layout_margin="2dp" android:background="@color/mastered_green"/>
-                    <View android:layout_width="24dp" android:layout_height="24dp" android:layout_margin="2dp" android:background="@color/soft_green"/>
-                    <View android:layout_width="24dp" android:layout_height="24dp" android:layout_margin="2dp" android:background="@color/divider" android:alpha="0.3"/>
-                    <View android:layout_width="24dp" android:layout_height="24dp" android:layout_margin="2dp" android:background="@color/divider" android:alpha="0.3"/>
-                    <View android:layout_width="24dp" android:layout_height="24dp" android:layout_margin="2dp" android:background="@color/divider" android:alpha="0.3"/>
+                    <View android:id="@+id/forecastDay1" android:layout_width="24dp" android:layout_height="24dp" android:layout_margin="2dp" android:background="@color/divider"/>
+                    <View android:id="@+id/forecastDay2" android:layout_width="24dp" android:layout_height="24dp" android:layout_margin="2dp" android:background="@color/divider"/>
+                    <View android:id="@+id/forecastDay3" android:layout_width="24dp" android:layout_height="24dp" android:layout_margin="2dp" android:background="@color/divider"/>
+                    <View android:id="@+id/forecastDay4" android:layout_width="24dp" android:layout_height="24dp" android:layout_margin="2dp" android:background="@color/divider"/>
+                    <View android:id="@+id/forecastDay5" android:layout_width="24dp" android:layout_height="24dp" android:layout_margin="2dp" android:background="@color/divider"/>
+                    <View android:id="@+id/forecastDay6" android:layout_width="24dp" android:layout_height="24dp" android:layout_margin="2dp" android:background="@color/divider"/>
+                    <View android:id="@+id/forecastDay7" android:layout_width="24dp" android:layout_height="24dp" android:layout_margin="2dp" android:background="@color/divider"/>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 

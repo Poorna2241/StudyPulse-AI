@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background">
+    android:background="@color/background"
+    android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -59,7 +60,7 @@
 
             <!-- Deck Title -->
             <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
@@ -102,7 +103,7 @@
                 android:visibility="visible">
 
                 <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Paste your study notes here...">
@@ -113,7 +114,11 @@
                         android:layout_height="wrap_content"
                         android:gravity="top"
                         android:inputType="textMultiLine"
-                        android:minLines="8" />
+                        android:minLines="8"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"
+                        android:clickable="true"
+                        android:enabled="true" />
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
 
@@ -195,7 +200,7 @@
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chipFlashcards"
-                    style="@style/Widget.Material3.Chip.Filter"
+                    style="@style/Widget.MaterialComponents.Chip.Filter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:checked="true"
@@ -203,7 +208,7 @@
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chipQuiz"
-                    style="@style/Widget.Material3.Chip.Filter"
+                    style="@style/Widget.MaterialComponents.Chip.Filter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/mode_quiz" />
@@ -272,6 +277,17 @@
                 android:visibility="gone"
                 app:indicatorColor="@color/primary"
                 app:trackColor="@color/primary_light" />
+
+            <TextView
+                android:id="@+id/tvProgressMessage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:text="Your flashcards and quiz are being generated, please wait..."
+                android:textColor="@color/text_secondary"
+                android:textSize="14sp"
+                android:visibility="gone" />
 
         </LinearLayout>
     </LinearLayout>
