@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     id 'com.google.gms.google-services'
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -10,13 +11,13 @@ android {
     defaultConfig {
         applicationId "com.yourgroup.studypulseai"
         minSdk 26
-        targetSdk 36
+        targetSdk 35
         versionCode 1
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField "String", "ANTHROPIC_API_KEY", "\"${project.findProperty('ANTHROPIC_API_KEY')}\""
+        buildConfigField "String", "ANTHROPIC_API_KEY", "\"${project.findProperty('ANTHROPIC_API_KEY') ?: ''}\""
     }
 
     buildFeatures {
@@ -49,10 +50,12 @@ dependencies {
     implementation 'androidx.navigation:navigation-fragment:2.7.7'
     implementation 'androidx.navigation:navigation-ui:2.7.7'
 
-    // Firebase (Auth + Firestore)
-    implementation platform('com.google.firebase:firebase-bom:33.1.0')
+    // Firebase (Auth + Firestore + AI Logic)
+    // Bumped from 33.1.0 -> 34.4.0: firebase-ai needs a more recent BOM
+    implementation platform('com.google.firebase:firebase-bom:34.4.0')
     implementation 'com.google.firebase:firebase-auth'
     implementation 'com.google.firebase:firebase-firestore'
+    implementation 'com.google.firebase:firebase-ai'
 
     // Room Database (local storage)
     implementation 'androidx.room:room-runtime:2.6.1'
@@ -73,4 +76,20 @@ dependencies {
     // Glide (for image loading if needed)
     implementation 'com.github.bumptech.glide:glide:4.16.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.16.0'
+
+    // Supabase
+    implementation platform(libs.supabase.bom)
+    implementation libs.supabase.postgrest
+    implementation libs.supabase.auth
+    implementation libs.supabase.storage
+    implementation libs.ktor.client.android
+    implementation libs.ktor.client.core
+    implementation libs.kotlinx.serialization.json
+
+    // NOTE: old deprecated Gemini SDK removed - it bundled Ktor 2.x internals
+    // that conflicted with Supabase's Ktor 3.x, causing NoClassDefFoundError
+    // on HttpTimeout. Replaced above by 'com.google.firebase:firebase-ai',
+    // which doesn't have this conflict and doesn't need a raw API key in
+    // BuildConfig (that's why GEMINI_API_KEY was removed from defaultConfig too).
+    implementation 'com.google.guava:guava:33.0.0-android'
 }
