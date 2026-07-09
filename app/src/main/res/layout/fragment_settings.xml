@@ -207,13 +207,13 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="16dp"
-                        android:hint="@string/label_primary_subjects">
+                        android:hint="@string/label_primary_subjects"
+                        app:placeholderText="@string/hint_subjects">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etPrimarySubjects"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:hint="@string/hint_subjects" />
+                            android:layout_height="wrap_content" />
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <!-- Daily Study Goal Section with Side-by-Side Label & Value -->
@@ -285,10 +285,14 @@
                     android:padding="16dp">
 
                     <LinearLayout
+                        android:id="@+id/rowReminders"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="12dp"
                         android:gravity="center_vertical"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:foreground="?android:attr/selectableItemBackground"
                         android:orientation="horizontal">
 
                         <TextView
@@ -304,16 +308,23 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:checked="true"
+                            android:clickable="false"
+                            android:focusable="false"
                             app:showText="false"/>
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/rowDarkMode"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:foreground="?android:attr/selectableItemBackground"
                         android:orientation="horizontal">
 
                         <TextView
+                            android:id="@+id/tvDarkModeLabel"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -325,6 +336,8 @@
                             android:id="@+id/switchDarkMode"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:clickable="false"
+                            android:focusable="false"
                             app:showText="false"/>
                     </LinearLayout>
 
