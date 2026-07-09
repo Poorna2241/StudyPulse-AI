@@ -78,9 +78,15 @@ public class HomeFragment extends Fragment {
     }
 
     private void updateUserGreeting() {
-        String name = SupabaseAuthHelper.getCurrentUserEmail();
-        if (name == null) name = getString(R.string.default_user_name);
-        else if (name.contains("@")) name = name.split("@")[0];
+        String name = SupabaseAuthHelper.getCurrentUserName();
+        if (name == null || name.trim().isEmpty() || "null".equalsIgnoreCase(name)) {
+            name = SupabaseAuthHelper.getCurrentUserEmail();
+            if (name == null) {
+                name = getString(R.string.default_user_name);
+            } else if (name.contains("@")) {
+                name = name.split("@")[0];
+            }
+        }
 
         int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
         String greeting;

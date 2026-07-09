@@ -52,11 +52,12 @@ public class NewDeckFragment extends Fragment {
     private TabLayout tabInputMethod;
     private LinearLayout panelText, panelFile;
     private MaterialCardView dropZone;
-    private TextView tvFileName, tvSliderValue, tvSliderLabel;
+    private TextView tvFileName, tvSliderValue, tvSliderLabel, tvProgressMessage;
     private Slider sliderCount;
     private ChipGroup chipGroupMode;
     private MaterialButton btnGenerate;
     private LinearProgressIndicator progressGenerate;
+    private androidx.appcompat.app.AlertDialog progressDialog;
 
     private final ActivityResultLauncher<Intent> filePickerLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(), result -> {
@@ -96,6 +97,7 @@ public class NewDeckFragment extends Fragment {
         chipGroupMode = view.findViewById(R.id.chipGroupMode);
         btnGenerate = view.findViewById(R.id.btnGenerate);
         progressGenerate = view.findViewById(R.id.progressGenerate);
+        tvProgressMessage = view.findViewById(R.id.tvProgressMessage);
 
         tabInputMethod.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -219,6 +221,13 @@ public class NewDeckFragment extends Fragment {
         btnGenerate.setEnabled(false);
         progressGenerate.setVisibility(View.VISIBLE);
         progressGenerate.setIndeterminate(true);
+        tvProgressMessage.setVisibility(View.VISIBLE);
+
+        progressDialog = new androidx.appcompat.app.AlertDialog.Builder(requireContext())
+                .setMessage("Please wait, quiz or flashcards are being created...")
+                .setCancelable(false)
+                .create();
+        progressDialog.show();
 
         String finalTitle = title;
         new GeminiApiService().generateDeck(notes, count, new GeminiApiService.ApiCallback() {
@@ -267,11 +276,15 @@ public class NewDeckFragment extends Fragment {
                                     }
                                     AppDatabase.getInstance(requireContext()).deckDao().insertQuizQuestions(questions);
 
-                                    requireActivity().runOnUiThread(() -> {
-                                        if (getView() == null) return; // fragment view destroyed before we got back to the UI thread
+                                     requireActivity().runOnUiThread(() -> {
+                                         if (getView() == null) return; // fragment view destroyed before we got back to the UI thread
 
-                                        progressGenerate.setVisibility(View.GONE);
-                                        btnGenerate.setEnabled(true);
+                                         if (progressDialog != null && progressDialog.isShowing()) {
+                                             progressDialog.dismiss();
+                                         }
+                                         progressGenerate.setVisibility(View.GONE);
+                                         tvProgressMessage.setVisibility(View.GONE);
+                                         btnGenerate.setEnabled(true);
                                         Toast.makeText(getContext(), "Deck generated and synced!", Toast.LENGTH_LONG).show();
 
                                         try {
@@ -287,7 +300,11 @@ public class NewDeckFragment extends Fragment {
                                 } catch (Exception e) {
                                     requireActivity().runOnUiThread(() -> {
                                         if (getView() == null) return;
+                                        if (progressDialog != null && progressDialog.isShowing()) {
+                                            progressDialog.dismiss();
+                                        }
                                         progressGenerate.setVisibility(View.GONE);
+                                        tvProgressMessage.setVisibility(View.GONE);
                                         btnGenerate.setEnabled(true);
                                         Toast.makeText(getContext(), "Local save error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                                     });
@@ -297,7 +314,11 @@ public class NewDeckFragment extends Fragment {
                     } else {
                         requireActivity().runOnUiThread(() -> {
                             if (getView() == null) return;
+                            if (progressDialog != null && progressDialog.isShowing()) {
+                                progressDialog.dismiss();
+                            }
                             progressGenerate.setVisibility(View.GONE);
+                            tvProgressMessage.setVisibility(View.GONE);
                             btnGenerate.setEnabled(true);
                             Toast.makeText(getContext(), "Failed to sync with Supabase", Toast.LENGTH_SHORT).show();
                         });
@@ -310,7 +331,11 @@ public class NewDeckFragment extends Fragment {
                 if (getActivity() == null) return;
                 requireActivity().runOnUiThread(() -> {
                     if (getView() == null) return;
+                    if (progressDialog != null && progressDialog.isShowing()) {
+                        progressDialog.dismiss();
+                    }
                     progressGenerate.setVisibility(View.GONE);
+                    tvProgressMessage.setVisibility(View.GONE);
                     btnGenerate.setEnabled(true);
                     Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
                 });

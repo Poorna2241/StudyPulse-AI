@@ -8,9 +8,16 @@ import com.google.firebase.FirebaseApp;
 import com.tom_roush.pdfbox.android.PDFBoxResourceLoader;
 
 public class StudyPulseApp extends Application {
+    private static StudyPulseApp instance;
+
+    public static StudyPulseApp getInstance() {
+        return instance;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
+        instance = this;
         FirebaseApp.initializeApp(this);
         PDFBoxResourceLoader.init(getApplicationContext());
 
