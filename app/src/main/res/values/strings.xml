@@ -89,7 +89,7 @@
     <string name="label_reminders">Study Reminders</string>
     <string name="label_dark_mode">Dark Mode</string>
     <string name="label_delete_account">Delete Account</string>
-    <string name="hint_subjects">e.g. Computer Science, Law, Medicine</string>
+    <string name="hint_subjects">e.g. Computer Science</string>
     <string name="btn_save_settings">Save Preferences</string>
     <string name="sign_out">Sign Out</string>
     <string name="new_deck_header_title">Create a New Deck</string>

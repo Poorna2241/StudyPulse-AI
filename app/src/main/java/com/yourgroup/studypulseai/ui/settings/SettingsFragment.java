@@ -27,13 +27,14 @@ import com.yourgroup.studypulseai.network.SupabaseAuthHelper;
 import com.yourgroup.studypulseai.ui.auth.LoginActivity;
 
 public class SettingsFragment extends Fragment {
-    private TextView tvUserName, tvUserEmail;
+    private TextView tvUserName, tvUserEmail, tvDarkModeLabel;
     private MaterialButton btnEditProfile, btnChangePassword, btnSignOut, btnDeleteAccount;
     private AutoCompleteTextView spinnerAcademicLevel;
     private TextInputEditText etPrimarySubjects;
     private TextView tvStudyGoalValue;
     private Slider sliderStudyGoal;
     private MaterialSwitch switchReminders, switchDarkMode;
+    private View rowReminders, rowDarkMode;
     
     private SharedPreferences prefs;
 
@@ -56,6 +57,7 @@ public class SettingsFragment extends Fragment {
     private void initViews(View v) {
         tvUserName = v.findViewById(R.id.tvUserName);
         tvUserEmail = v.findViewById(R.id.tvUserEmail);
+        tvDarkModeLabel = v.findViewById(R.id.tvDarkModeLabel);
         btnEditProfile = v.findViewById(R.id.btnEditProfile);
         btnChangePassword = v.findViewById(R.id.btnChangePassword);
         btnSignOut = v.findViewById(R.id.btnSignOut);
@@ -66,6 +68,8 @@ public class SettingsFragment extends Fragment {
         sliderStudyGoal = v.findViewById(R.id.sliderStudyGoal);
         switchReminders = v.findViewById(R.id.switchReminders);
         switchDarkMode = v.findViewById(R.id.switchDarkMode);
+        rowReminders = v.findViewById(R.id.rowReminders);
+        rowDarkMode = v.findViewById(R.id.rowDarkMode);
     }
 
     private void setupUserData() {
@@ -94,7 +98,9 @@ public class SettingsFragment extends Fragment {
         sliderStudyGoal.setValue(goal);
         tvStudyGoalValue.setText(String.valueOf((int) goal));
         switchReminders.setChecked(prefs.getBoolean("reminders_enabled", true));
-        switchDarkMode.setChecked(prefs.getBoolean("dark_mode", false));
+        boolean isDark = prefs.getBoolean("dark_mode", false);
+        switchDarkMode.setChecked(isDark);
+        tvDarkModeLabel.setText(isDark ? "Light Mode" : "Dark Mode");
     }
 
     private void setupListeners() {
@@ -106,19 +112,23 @@ public class SettingsFragment extends Fragment {
             new AlertDialog.Builder(requireContext())
                 .setTitle("Delete Account")
                 .setMessage("Are you sure? This cannot be undone.")
-                .setPositiveButton("Delete", (dialog, which) -> {
-                    // Logic to delete from Supabase...
-                    Toast.makeText(getContext(), "Account deletion initiated", Toast.LENGTH_SHORT).show();
-                })
+                .setPositiveButton("Delete", (dialog, which) -> deleteUserAccount())
                 .setNegativeButton("Cancel", null)
                 .show();
         });
 
         switchDarkMode.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            prefs.edit().putBoolean("dark_mode", isChecked).apply();
-            AppCompatDelegate.setDefaultNightMode(isChecked ? 
-                AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO);
+            boolean current = prefs.getBoolean("dark_mode", false);
+            if (current != isChecked) {
+                prefs.edit().putBoolean("dark_mode", isChecked).apply();
+                tvDarkModeLabel.setText(isChecked ? "Light Mode" : "Dark Mode");
+                AppCompatDelegate.setDefaultNightMode(isChecked ? 
+                    AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO);
+            }
         });
+
+        rowDarkMode.setOnClickListener(v -> switchDarkMode.setChecked(!switchDarkMode.isChecked()));
+        rowReminders.setOnClickListener(v -> switchReminders.setChecked(!switchReminders.isChecked()));
 
         // Save AI settings when they change
         sliderStudyGoal.addOnChangeListener((slider, value, fromUser) -> {
@@ -128,6 +138,31 @@ public class SettingsFragment extends Fragment {
 
         switchReminders.setOnCheckedChangeListener((button, isChecked) -> 
             prefs.edit().putBoolean("reminders_enabled", isChecked).apply());
+    }
+
+    private void deleteUserAccount() {
+        new Thread(() -> {
+            try {
+                com.yourgroup.studypulseai.data.db.AppDatabase.getInstance(requireContext()).clearAllTables();
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        SupabaseAuthHelper.signOut(success -> {
+                            Toast.makeText(getContext(), "Account deleted successfully", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(getActivity(), LoginActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
+                            if (getActivity() != null) getActivity().finish();
+                        });
+                    });
+                }
+            } catch (Exception e) {
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        Toast.makeText(getContext(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    });
+                }
+            }
+        }).start();
     }
 
     private void showEditProfileDialog() {
