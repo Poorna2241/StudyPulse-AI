@@ -85,7 +85,7 @@
                 android:gravity="end">
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnStudy"
-                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:layout_width="wrap_content" android:layout_height="36dp"
                     android:text="Study" android:layout_marginEnd="8dp"
                     android:textColor="@android:color/white"

@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "227412713401",
-    "project_id": "studypulse-ai-cdb1f",
-    "storage_bucket": "studypulse-ai-cdb1f.firebasestorage.app"
+    "project_number": "1036569703395",
+    "project_id": "studypulse-ai-v2",
+    "storage_bucket": "studypulse-ai-v2.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:227412713401:android:f496b37c626ac95adfe068",
+        "mobilesdk_app_id": "1:1036569703395:android:714a94700d1ab2d4c6a6d6",
         "android_client_info": {
           "package_name": "com.yourgroup.studypulseai"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyCzRIfRV9HhM3FDXuZ1kdhYGKzAenYceJo"
+          "current_key": "AIzaSyApyCvAKDp8RZ_UiV-KU4aEi9PM9MmFeBQ"
         }
       ],
       "services": {

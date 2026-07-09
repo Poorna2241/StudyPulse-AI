@@ -7,6 +7,7 @@ import androidx.room.Update;
 import com.yourgroup.studypulseai.data.model.Deck;
 import com.yourgroup.studypulseai.data.model.Flashcard;
 import com.yourgroup.studypulseai.data.model.QuizResult;
+import com.yourgroup.studypulseai.data.model.QuizQuestion;
 import com.yourgroup.studypulseai.data.model.StudyActivity;
 import java.util.List;
 
@@ -68,4 +69,14 @@ public interface DeckDao {
 
     @Update
     void updateStudyActivity(StudyActivity activity);
+
+    // Deck stats & quiz questions
+    @Query("SELECT COUNT(*) FROM flashcards WHERE deckId = :deckId")
+    int getFlashcardCount(int deckId);
+
+    @Insert
+    void insertQuizQuestions(List<QuizQuestion> questions);
+
+    @Query("SELECT * FROM quiz_questions WHERE deckId = :deckId")
+    List<QuizQuestion> getQuizQuestionsByDeck(int deckId);
 }

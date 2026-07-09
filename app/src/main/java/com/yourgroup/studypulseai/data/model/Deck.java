@@ -6,10 +6,13 @@ import androidx.room.PrimaryKey;
 @Entity(tableName = "decks")
 public class Deck {
     @PrimaryKey(autoGenerate = true)
-    private int id;
-    private String title;
-    private String backgroundImage;
-    private long createdAt;
+    public int id;
+    public String title;
+    public String backgroundImage;
+    public long createdAt;
+
+    public Deck() {
+    }
 
     public Deck(String title, String backgroundImage) {
         this.title = title;
@@ -20,6 +23,7 @@ public class Deck {
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
     public String getTitle() { return title; }
+    public void setTitle(String title) { this.title = title; }
     public String getBackgroundImage() { return backgroundImage; }
     public void setBackgroundImage(String backgroundImage) { this.backgroundImage = backgroundImage; }
     public long getCreatedAt() { return createdAt; }

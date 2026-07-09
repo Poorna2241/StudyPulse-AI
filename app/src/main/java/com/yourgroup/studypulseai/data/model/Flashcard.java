@@ -14,6 +14,9 @@ public class Flashcard {
     // 0: Struggling, 1: Learning, 2: Mastered
     private int masteryLevel = 1; 
 
+    public Flashcard() {
+    }
+
     public Flashcard(String question, String answer) {
         this.question = question;
         this.answer = answer;
