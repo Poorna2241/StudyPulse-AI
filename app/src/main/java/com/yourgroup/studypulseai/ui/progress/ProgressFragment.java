@@ -72,6 +72,19 @@ public class ProgressFragment extends Fragment {
             final int actions = totalActions;
             
             List<Deck> decks = deckDao.getAllDecks();
+            java.util.Map<Integer, Integer> masteryMap = new java.util.HashMap<>();
+            for (Deck deck : decks) {
+                java.util.List<com.yourgroup.studypulseai.data.model.Flashcard> cards = deckDao.getFlashcardsByDeck(deck.getId());
+                int deckMastery = 0;
+                if (cards != null && !cards.isEmpty()) {
+                    int sumMastery = 0;
+                    for (com.yourgroup.studypulseai.data.model.Flashcard card : cards) {
+                        sumMastery += card.getMasteryLevel();
+                    }
+                    deckMastery = (sumMastery * 100) / (cards.size() * 2);
+                }
+                masteryMap.put(deck.getId(), deckMastery);
+            }
 
             requireActivity().runOnUiThread(() -> {
                 tvStreakValue.setText(String.valueOf(streak));
@@ -79,12 +92,12 @@ public class ProgressFragment extends Fragment {
                 tvCardsValue.setText(String.format(Locale.getDefault(), "%,d", actions));
                 tvQuizzesValue.setText(String.valueOf(quizzesTaken));
                 
-                updateSubjectProgress(decks);
+                updateSubjectProgress(decks, masteryMap);
             });
         }).start();
     }
 
-    private void updateSubjectProgress(List<Deck> decks) {
+    private void updateSubjectProgress(List<Deck> decks, java.util.Map<Integer, Integer> masteryMap) {
         llSubjectProgress.removeAllViews();
         LayoutInflater inflater = LayoutInflater.from(requireContext());
         
@@ -94,8 +107,8 @@ public class ProgressFragment extends Fragment {
             ProgressBar progressBar = itemView.findViewById(R.id.pbSubjectMastery);
             
             tvName.setText(deck.getTitle());
-            // For now, random progress since we don't have deck-specific mastery calculated yet
-            progressBar.setProgress(new java.util.Random().nextInt(60) + 40); 
+            int progress = masteryMap.containsKey(deck.getId()) ? masteryMap.get(deck.getId()) : 0;
+            progressBar.setProgress(progress); 
             
             llSubjectProgress.addView(itemView);
         }
