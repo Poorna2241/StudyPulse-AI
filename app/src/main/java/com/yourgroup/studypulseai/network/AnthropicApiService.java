@@ -34,6 +34,11 @@ public class AnthropicApiService {
     }
 
     public void generateDeck(String notes, int count, ApiCallback callback) {
+        if (API_KEY == null || API_KEY.isEmpty() || API_KEY.equals("null")) {
+            callback.onError("Anthropic API Key is missing. Please add it to your gradle.properties file.");
+            return;
+        }
+
         String prompt = "You are a study assistant. Given the notes below, " +
             "generate exactly " + count + " flashcards and " + count +
             " quiz questions. Respond ONLY with valid JSON in this exact format:\n" +
@@ -60,12 +65,26 @@ public class AnthropicApiService {
             client.newCall(request).enqueue(new Callback() {
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
+                    String responseBody = response.body().string();
+                    if (!response.isSuccessful()) {
+                        callback.onError("API Error (" + response.code() + "): " + responseBody);
+                        return;
+                    }
                     try {
-                        String responseBody = response.body().string();
                         JSONObject json = new JSONObject(responseBody);
                         String text = json.getJSONArray("content")
                             .getJSONObject(0).getString("text");
-                        JSONObject data = new JSONObject(text);
+                        
+                        // Clean the text in case Claude adds markdown backticks
+                        if (text.contains("```json")) {
+                            text = text.substring(text.indexOf("```json") + 7);
+                            text = text.substring(0, text.lastIndexOf("```"));
+                        } else if (text.contains("```")) {
+                            text = text.substring(text.indexOf("```") + 3);
+                            text = text.substring(0, text.lastIndexOf("```"));
+                        }
+                        
+                        JSONObject data = new JSONObject(text.trim());
                         
                         List<Flashcard> flashcards = new Gson().fromJson(
                             data.getJSONArray("flashcards").toString(),
@@ -77,7 +96,7 @@ public class AnthropicApiService {
                             
                         callback.onSuccess(flashcards, questions);
                     } catch (Exception e) {
-                        callback.onError("Parse error: " + e.getMessage());
+                        callback.onError("Parse error: " + e.getMessage() + "\nResponse: " + responseBody);
                     }
                 }
 

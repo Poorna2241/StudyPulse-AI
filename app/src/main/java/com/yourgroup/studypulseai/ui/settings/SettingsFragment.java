@@ -22,9 +22,8 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.materialswitch.MaterialSwitch;
 import com.google.android.material.slider.Slider;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.yourgroup.studypulseai.R;
+import com.yourgroup.studypulseai.network.SupabaseAuthHelper;
 import com.yourgroup.studypulseai.ui.auth.LoginActivity;
 
 public class SettingsFragment extends Fragment {
@@ -70,10 +69,15 @@ public class SettingsFragment extends Fragment {
     }
 
     private void setupUserData() {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) {
-            tvUserName.setText(user.getDisplayName() != null ? user.getDisplayName() : getString(R.string.default_user_name));
-            tvUserEmail.setText(user.getEmail());
+        String email = SupabaseAuthHelper.getCurrentUserEmail();
+        String name = SupabaseAuthHelper.getCurrentUserName();
+        
+        if (email != null) {
+            if (name == null || name.isEmpty() || name.equals("null")) {
+                name = email.contains("@") ? email.split("@")[0] : email;
+            }
+            tvUserName.setText(name);
+            tvUserEmail.setText(email);
         }
     }
 
@@ -94,6 +98,8 @@ public class SettingsFragment extends Fragment {
     }
 
     private void setupListeners() {
+        btnEditProfile.setOnClickListener(v -> showEditProfileDialog());
+        btnChangePassword.setOnClickListener(v -> showChangePasswordDialog());
         btnSignOut.setOnClickListener(v -> signOut());
         
         btnDeleteAccount.setOnClickListener(v -> {
@@ -101,7 +107,7 @@ public class SettingsFragment extends Fragment {
                 .setTitle("Delete Account")
                 .setMessage("Are you sure? This cannot be undone.")
                 .setPositiveButton("Delete", (dialog, which) -> {
-                    // Logic to delete from Firebase...
+                    // Logic to delete from Supabase...
                     Toast.makeText(getContext(), "Account deletion initiated", Toast.LENGTH_SHORT).show();
                 })
                 .setNegativeButton("Cancel", null)
@@ -124,6 +130,57 @@ public class SettingsFragment extends Fragment {
             prefs.edit().putBoolean("reminders_enabled", isChecked).apply());
     }
 
+    private void showEditProfileDialog() {
+        TextInputEditText etNewName = new TextInputEditText(requireContext());
+        etNewName.setHint("Enter new name");
+        etNewName.setText(tvUserName.getText());
+
+        new AlertDialog.Builder(requireContext())
+            .setTitle("Edit Profile")
+            .setView(etNewName)
+            .setPositiveButton("Update", (dialog, which) -> {
+                String name = etNewName.getText().toString().trim();
+                if (!name.isEmpty()) {
+                    SupabaseAuthHelper.updateProfileName(name, (success, error) -> {
+                        if (success) {
+                            tvUserName.setText(name);
+                            Toast.makeText(getContext(), "Profile updated", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getContext(), "Error: " + error, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            })
+            .setNegativeButton("Cancel", null)
+            .show();
+    }
+
+    private void showChangePasswordDialog() {
+        TextInputEditText etNewPass = new TextInputEditText(requireContext());
+        etNewPass.setHint("Enter new password");
+        etNewPass.setInputType(android.text.InputType.TYPE_CLASS_TEXT | android.text.InputType.TYPE_TEXT_VARIATION_PASSWORD);
+
+        new AlertDialog.Builder(requireContext())
+            .setTitle("Change Password")
+            .setView(etNewPass)
+            .setPositiveButton("Change", (dialog, which) -> {
+                String pass = etNewPass.getText().toString().trim();
+                if (pass.length() >= 6) {
+                    SupabaseAuthHelper.changePassword(pass, (success, error) -> {
+                        if (success) {
+                            Toast.makeText(getContext(), "Password changed", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getContext(), "Error: " + error, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                } else {
+                    Toast.makeText(getContext(), "Password too short", Toast.LENGTH_SHORT).show();
+                }
+            })
+            .setNegativeButton("Cancel", null)
+            .show();
+    }
+
     @Override
     public void onPause() {
         super.onPause();
@@ -135,10 +192,11 @@ public class SettingsFragment extends Fragment {
     }
 
     private void signOut() {
-        FirebaseAuth.getInstance().signOut();
-        Intent intent = new Intent(getActivity(), LoginActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
-        if (getActivity() != null) getActivity().finish();
+        SupabaseAuthHelper.signOut(success -> {
+            Intent intent = new Intent(getActivity(), LoginActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            if (getActivity() != null) getActivity().finish();
+        });
     }
 }
