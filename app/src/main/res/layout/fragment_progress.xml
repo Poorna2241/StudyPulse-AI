@@ -358,14 +358,14 @@
                             android:layout_alignParentEnd="true"
                             app:singleSelection="true">
                             <com.google.android.material.chip.Chip
-                                style="@style/Widget.Material3.Chip.Filter"
+                                style="@style/Widget.MaterialComponents.Chip.Filter"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/filter_all"
                                 android:checked="true"
                                 android:textSize="11sp"/>
                             <com.google.android.material.chip.Chip
-                                style="@style/Widget.Material3.Chip.Filter"
+                                style="@style/Widget.MaterialComponents.Chip.Filter"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/filter_software"
@@ -547,7 +547,7 @@
 
                     <Button
                         android:id="@+id/btnRefresher"
-                        style="@style/Widget.Material3.Button.TonalButton"
+                        style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"

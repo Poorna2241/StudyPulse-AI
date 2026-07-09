@@ -4,31 +4,64 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/homeFragment">
 
-    <fragment android:id="@+id/homeFragment"
+    <fragment
+        android:id="@+id/homeFragment"
         android:name="com.yourgroup.studypulseai.ui.home.HomeFragment"
         android:label="Home" />
 
-    <fragment android:id="@+id/newDeckFragment"
+    <fragment
+        android:id="@+id/newDeckFragment"
         android:name="com.yourgroup.studypulseai.ui.newdeck.NewDeckFragment"
-        android:label="New Deck" />
+        android:label="New Deck">
 
-    <fragment android:id="@+id/filePreviewFragment"
+        <!-- Used in NewDeckFragment.handleFileSelected() -->
+        <action
+            android:id="@+id/action_newDeckFragment_to_filePreviewFragment"
+            app:destination="@id/filePreviewFragment" />
+
+        <!-- Used in NewDeckFragment.generateDeck() onSuccess -->
+        <action
+            android:id="@+id/action_newDeckFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="true" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/filePreviewFragment"
         android:name="com.yourgroup.studypulseai.ui.newdeck.FilePreviewFragment"
-        android:label="File Preview" />
+        android:label="File Preview">
 
-    <fragment android:id="@+id/studyFragment"
+        <!-- FilePreviewFragment uses popBackStack(), no action needed for that,
+             but kept here in case you later navigate forward instead -->
+
+    </fragment>
+
+    <!-- NOTE: studyFragment and quizFragment don't call navigate() anywhere in the
+         code you've shared yet (they use dummy/placeholder data). No actions added
+         here since there's nothing to wire up. If you add real navigation calls
+         from these later (e.g. Study -> Quiz), add matching <action> elements
+         the same way as above, then reference the action's ID in your .navigate() call. -->
+
+    <fragment
+        android:id="@+id/studyFragment"
         android:name="com.yourgroup.studypulseai.ui.study.StudyFragment"
         android:label="Study" />
 
-    <fragment android:id="@+id/quizFragment"
+    <fragment
+        android:id="@+id/quizFragment"
         android:name="com.yourgroup.studypulseai.ui.study.QuizFragment"
         android:label="Quiz" />
 
-    <fragment android:id="@+id/progressFragment"
+    <fragment
+        android:id="@+id/progressFragment"
         android:name="com.yourgroup.studypulseai.ui.progress.ProgressFragment"
         android:label="Progress" />
 
-    <fragment android:id="@+id/settingsFragment"
+    <fragment
+        android:id="@+id/settingsFragment"
         android:name="com.yourgroup.studypulseai.ui.settings.SettingsFragment"
         android:label="Settings" />
+
 </navigation>

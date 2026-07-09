@@ -68,6 +68,51 @@
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
+    <!-- Mastery Options -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="8dp"
+        android:layout_gravity="center_horizontal"
+        android:text="How well do you know this card?"
+        android:textColor="@color/text_secondary"
+        android:textSize="14sp" />
+
+    <com.google.android.material.button.MaterialButtonToggleGroup
+        android:id="@+id/masteryGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="8dp"
+        app:singleSelection="true"
+        app:selectionRequired="true">
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnStruggling"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Struggling"
+            app:strokeColor="#FF4A4A"
+            android:textColor="#FF4A4A" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnLearning"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Learning"
+            app:strokeColor="#FFAE00"
+            android:textColor="#FFAE00" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnMastered"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Mastered"
+            app:strokeColor="#2ECC71"
+            android:textColor="#2ECC71" />
+    </com.google.android.material.button.MaterialButtonToggleGroup>
+
     <!-- Navigation Buttons -->
     <LinearLayout android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -77,7 +122,7 @@
         android:weightSum="3">
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnPrev"
-            style="@style/Widget.Material3.Button.OutlinedButton"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="0dp" android:layout_height="wrap_content"
             android:layout_weight="1" android:text="Prev"
             android:layout_marginEnd="8dp" />
