@@ -55,6 +55,7 @@
     <color name="bg_gradient_center">#B4AEEC</color>
     <color name="bg_gradient_end">#A6A0E7</color>
     <!-- Aurora Dream Gradient Colors -->
+    <color name="splash_bg">#FFFFFF</color>
     <color name="aurora_base_start">#F7EAFF</color>
     <color name="aurora_base_end">#FDE2EA</color>
     <color name="aurora_purple">#80AF6DFF</color>

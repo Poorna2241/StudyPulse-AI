@@ -35,4 +35,5 @@
     <color name="soft_cyan">#371F62</color>
     <color name="soft_green">#192E54</color>
     <color name="soft_orange">#371F62</color>
+    <color name="splash_bg">#000000</color>
 </resources>
