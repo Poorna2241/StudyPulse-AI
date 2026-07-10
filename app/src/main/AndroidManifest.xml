@@ -18,16 +18,19 @@
         android:theme="@style/Theme.StudyPulseAI"
         android:usesCleartextTraffic="false">
 
-        <!-- Launcher Activity (MainActivity handles auth redirection) -->
         <activity
-            android:name=".MainActivity"
-            android:exported="true">
-<!--            android:theme="@style/Theme.AppCompat.Light.DarkActionBar">-->
+            android:name=".SplashActivity"
+            android:exported="true"
+            android:theme="@style/Theme.StudyPulseAI">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="false" />
 
         <activity
             android:name=".ui.auth.LoginActivity"
