@@ -12,6 +12,7 @@ public class WelcomeActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        getDelegate().setLocalNightMode(androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO);
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate started");
         
