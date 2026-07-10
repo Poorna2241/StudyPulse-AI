@@ -1,5 +1,6 @@
 package com.yourgroup.studypulseai.ui.study;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -73,6 +74,11 @@ public class StudyFragment extends Fragment {
                 currentIndex++;
                 isShowingQuestion = true;
                 showCard();
+            } else {
+                // Finish session
+                if (getActivity() != null) {
+                    requireActivity().getOnBackPressedDispatcher().onBackPressed();
+                }
             }
         });
 
@@ -124,7 +130,17 @@ public class StudyFragment extends Fragment {
         studyProgress.setProgress(progress);
 
         btnPrev.setEnabled(currentIndex > 0);
-        btnNext.setEnabled(currentIndex < flashcards.size() - 1);
+        
+        if (currentIndex == flashcards.size() - 1) {
+            btnNext.setText("Finish");
+            btnNext.setBackgroundTintList(android.content.res.ColorStateList.valueOf(
+                getResources().getColor(R.color.correct, null)));
+        } else {
+            btnNext.setText("Next");
+            btnNext.setBackgroundTintList(android.content.res.ColorStateList.valueOf(
+                Color.parseColor("#8231BC")));
+        }
+        btnNext.setEnabled(true);
 
         // Set toggle group state without triggering listener
         masteryGroup.clearChecked();
