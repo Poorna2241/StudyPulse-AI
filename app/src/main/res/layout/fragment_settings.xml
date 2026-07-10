@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
@@ -303,14 +304,15 @@
                             android:textColor="@color/text_primary"
                             android:textSize="16sp" />
 
-                        <com.google.android.material.materialswitch.MaterialSwitch
+                        <com.google.android.material.switchmaterial.SwitchMaterial
                             android:id="@+id/switchReminders"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:checked="true"
                             android:clickable="false"
                             android:focusable="false"
-                            app:showText="false"/>
+                            app:thumbTint="#E3E0E9"
+                            app:trackTint="#9C27B0" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -332,13 +334,14 @@
                             android:textColor="@color/text_primary"
                             android:textSize="16sp" />
 
-                        <com.google.android.material.materialswitch.MaterialSwitch
+                        <com.google.android.material.switchmaterial.SwitchMaterial
                             android:id="@+id/switchDarkMode"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:clickable="false"
                             android:focusable="false"
-                            app:showText="false"/>
+                            app:thumbTint="#F2F1F2"
+                            app:trackTint="#9C27B0" />
                     </LinearLayout>
 
                 </LinearLayout>

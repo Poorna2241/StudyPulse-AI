@@ -19,7 +19,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.button.MaterialButton;
-import com.google.android.material.materialswitch.MaterialSwitch;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.material.slider.Slider;
 import com.google.android.material.textfield.TextInputEditText;
 import com.yourgroup.studypulseai.R;
@@ -27,13 +27,13 @@ import com.yourgroup.studypulseai.network.SupabaseAuthHelper;
 import com.yourgroup.studypulseai.ui.auth.LoginActivity;
 
 public class SettingsFragment extends Fragment {
-    private TextView tvUserName, tvUserEmail, tvDarkModeLabel;
+    private TextView tvUserName, tvUserEmail;
     private MaterialButton btnEditProfile, btnChangePassword, btnSignOut, btnDeleteAccount;
     private AutoCompleteTextView spinnerAcademicLevel;
     private TextInputEditText etPrimarySubjects;
     private TextView tvStudyGoalValue;
     private Slider sliderStudyGoal;
-    private MaterialSwitch switchReminders, switchDarkMode;
+    private SwitchMaterial switchReminders, switchDarkMode;
     private View rowReminders, rowDarkMode;
     
     private SharedPreferences prefs;
@@ -57,7 +57,6 @@ public class SettingsFragment extends Fragment {
     private void initViews(View v) {
         tvUserName = v.findViewById(R.id.tvUserName);
         tvUserEmail = v.findViewById(R.id.tvUserEmail);
-        tvDarkModeLabel = v.findViewById(R.id.tvDarkModeLabel);
         btnEditProfile = v.findViewById(R.id.btnEditProfile);
         btnChangePassword = v.findViewById(R.id.btnChangePassword);
         btnSignOut = v.findViewById(R.id.btnSignOut);
@@ -100,7 +99,6 @@ public class SettingsFragment extends Fragment {
         switchReminders.setChecked(prefs.getBoolean("reminders_enabled", true));
         boolean isDark = prefs.getBoolean("dark_mode", false);
         switchDarkMode.setChecked(isDark);
-        tvDarkModeLabel.setText(isDark ? "Light Mode" : "Dark Mode");
     }
 
     private void setupListeners() {
@@ -121,7 +119,6 @@ public class SettingsFragment extends Fragment {
             boolean current = prefs.getBoolean("dark_mode", false);
             if (current != isChecked) {
                 prefs.edit().putBoolean("dark_mode", isChecked).apply();
-                tvDarkModeLabel.setText(isChecked ? "Light Mode" : "Dark Mode");
                 AppCompatDelegate.setDefaultNightMode(isChecked ? 
                     AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO);
             }
