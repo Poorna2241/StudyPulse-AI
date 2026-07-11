@@ -7,6 +7,8 @@ import com.yourgroup.studypulseai.data.db.Converters;
 import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
+// This class represents a QuizQuestion entity in the Room database. It contains fields for the quiz question's ID, associated deck ID, question text, list of options, and the index of the correct option. The ID is auto-generated, and the options are stored as a list of strings.
+
 @Entity(tableName = "quiz_questions")
 @TypeConverters(Converters.class)
 public class QuizQuestion {

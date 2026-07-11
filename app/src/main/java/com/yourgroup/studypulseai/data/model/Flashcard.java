@@ -3,6 +3,7 @@ package com.yourgroup.studypulseai.data.model;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+// This class represents a Flashcard entity in the Room database. It contains fields for the flashcard's ID, associated deck ID, question, answer, and mastery level. The ID is auto-generated, and the mastery level is initialized to 1 (Learning) by default.
 @Entity(tableName = "flashcards")
 public class Flashcard {
     @PrimaryKey(autoGenerate = true)
