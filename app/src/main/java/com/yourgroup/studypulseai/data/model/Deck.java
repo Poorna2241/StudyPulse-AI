@@ -21,6 +21,7 @@ public class Deck {
         this.createdAt = System.currentTimeMillis();
     }
 
+    // Getters and setters for the Deck class fields
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
     public String getTitle() { return title; }
