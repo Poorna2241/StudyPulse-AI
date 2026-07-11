@@ -3,6 +3,7 @@ package com.yourgroup.studypulseai.data.model;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+// This class represents a Deck entity in the Room database. It contains fields for the deck's ID, title, background image, and creation timestamp. The ID is auto-generated, and the createdAt field is set to the current system time when a new Deck is instantiated.
 @Entity(tableName = "decks")
 public class Deck {
     @PrimaryKey(autoGenerate = true)
