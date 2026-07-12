@@ -4,10 +4,14 @@ import android.content.Context;
 import com.yourgroup.studypulseai.data.db.AppDatabase;
 import com.yourgroup.studypulseai.data.db.DeckDao;
 import com.yourgroup.studypulseai.data.model.QuizResult;
+import com.yourgroup.studypulseai.data.model.QuizQuestion;
+import com.yourgroup.studypulseai.data.model.QuizAttemptQuestion;
 import com.yourgroup.studypulseai.data.model.StudyActivity;
 import com.yourgroup.studypulseai.network.SupabaseRepo;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import android.util.Log;
 
 public class ProgressManager {
@@ -67,12 +71,21 @@ public class ProgressManager {
         }).start();
     }
 
-    public static void recordQuizResult(Context context, int deckId, int score) {
+    public static void recordQuizResult(Context context, int deckId, int score, List<QuizQuestion> questions, List<Integer> userAnswers) {
         Log.e(TAG, "recordQuizResult called for deck: " + deckId + " with score: " + score);
         new Thread(() -> {
             DeckDao dao = AppDatabase.getInstance(context).deckDao();
             QuizResult result = new QuizResult(deckId, score, System.currentTimeMillis());
-            dao.insertQuizResult(result);
+            long resultId = dao.insertQuizResult(result);
+            
+            // Save detailed questions for this specific attempt
+            List<QuizAttemptQuestion> attemptDetails = new ArrayList<>();
+            for (int i = 0; i < questions.size(); i++) {
+                QuizQuestion q = questions.get(i);
+                int userIndex = (i < userAnswers.size()) ? userAnswers.get(i) : -1;
+                attemptDetails.add(new QuizAttemptQuestion((int)resultId, q.getQuestion(), q.getOptions(), q.getCorrectIndex(), userIndex));
+            }
+            dao.insertQuizAttemptQuestions(attemptDetails);
             
             SupabaseRepo.saveQuizResult("Deck-" + deckId, score, 10, success -> {});
             recordAction(context);

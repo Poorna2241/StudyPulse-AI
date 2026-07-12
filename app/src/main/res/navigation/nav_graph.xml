@@ -7,7 +7,11 @@
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.yourgroup.studypulseai.ui.home.HomeFragment"
-        android:label="Home" />
+        android:label="Home">
+        <action
+            android:id="@+id/action_homeFragment_to_deckHistoryFragment"
+            app:destination="@id/deckHistoryFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/newDeckFragment"
@@ -69,5 +73,19 @@
         android:id="@+id/settingsFragment"
         android:name="com.yourgroup.studypulseai.ui.settings.SettingsFragment"
         android:label="Settings" />
+
+    <fragment
+        android:id="@+id/deckHistoryFragment"
+        android:name="com.yourgroup.studypulseai.ui.history.DeckHistoryFragment"
+        android:label="Deck History">
+        <action
+            android:id="@+id/action_deckHistoryFragment_to_quizReviewFragment"
+            app:destination="@id/quizReviewFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/quizReviewFragment"
+        android:name="com.yourgroup.studypulseai.ui.history.QuizReviewFragment"
+        android:label="Quiz Review" />
 
 </navigation>

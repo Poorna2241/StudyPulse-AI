@@ -8,9 +8,10 @@ import com.yourgroup.studypulseai.data.model.Deck;
 import com.yourgroup.studypulseai.data.model.Flashcard;
 import com.yourgroup.studypulseai.data.model.QuizQuestion;
 import com.yourgroup.studypulseai.data.model.QuizResult;
+import com.yourgroup.studypulseai.data.model.QuizAttemptQuestion;
 import com.yourgroup.studypulseai.data.model.StudyActivity;
 
-@Database(entities = {Deck.class, Flashcard.class, QuizQuestion.class, QuizResult.class, StudyActivity.class}, version = 2)
+@Database(entities = {Deck.class, Flashcard.class, QuizQuestion.class, QuizResult.class, QuizAttemptQuestion.class, StudyActivity.class}, version = 3)
 public abstract class AppDatabase extends RoomDatabase {
     private static AppDatabase instance;
 

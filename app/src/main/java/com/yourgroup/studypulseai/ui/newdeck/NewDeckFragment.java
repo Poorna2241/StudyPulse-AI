@@ -260,7 +260,7 @@ public class NewDeckFragment extends Fragment {
                                 if (getContext() == null) return;
 
                                 try {
-                                    Deck localDeck = new Deck(finalTitle, randomBg);
+                                    Deck localDeck = new Deck(finalTitle, randomBg, notes);
                                     long localId = AppDatabase.getInstance(requireContext()).deckDao().insertDeck(localDeck);
                                     for (Flashcard f : flashcards) {
                                         f.setDeckId((int) localId);

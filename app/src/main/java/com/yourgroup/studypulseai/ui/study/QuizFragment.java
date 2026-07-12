@@ -21,7 +21,9 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.yourgroup.studypulseai.R;
 import com.yourgroup.studypulseai.data.db.AppDatabase;
+import com.yourgroup.studypulseai.data.model.Deck;
 import com.yourgroup.studypulseai.data.model.QuizQuestion;
+import com.yourgroup.studypulseai.network.GeminiApiService;
 import com.yourgroup.studypulseai.util.ProgressManager;
 
 import java.util.ArrayList;
@@ -35,6 +37,7 @@ public class QuizFragment extends Fragment {
     private LinearProgressIndicator quizProgress;
 
     private List<QuizQuestion> quizQuestions = new ArrayList<>();
+    private List<Integer> userAnswers = new ArrayList<>();
     private int currentIndex = 0;
     private int score = 0;
     private int deckId = -1;
@@ -90,23 +93,97 @@ public class QuizFragment extends Fragment {
             return;
         }
 
+        // Show a loading dialog during AI regeneration
+        AlertDialog loadingDialog = new AlertDialog.Builder(requireContext())
+                .setMessage("Regenerating fresh questions for your quiz...")
+                .setCancelable(false)
+                .create();
+        loadingDialog.show();
+
         new Thread(() -> {
-            List<QuizQuestion> loaded = AppDatabase.getInstance(requireContext())
-                    .deckDao().getQuizQuestionsByDeck(deckId);
+            AppDatabase db = AppDatabase.getInstance(requireContext());
+            Deck deck = db.deckDao().getDeckById(deckId);
+            
+            if (deck == null || deck.notes == null || deck.notes.isEmpty()) {
+                // Fallback to loading existing questions if notes are missing
+                List<QuizQuestion> loaded = db.deckDao().getQuizQuestionsByDeck(deckId);
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        loadingDialog.dismiss();
+                        quizQuestions = loaded;
+                        if (quizQuestions.isEmpty()) {
+                            tvQuestion.setText("No quiz questions available for this deck. Please generate a new deck with questions.");
+                            tvQuizCounter.setText("0 / 0");
+                            optionA.setVisibility(View.GONE);
+                            optionB.setVisibility(View.GONE);
+                            optionC.setVisibility(View.GONE);
+                            optionD.setVisibility(View.GONE);
+                            btnSubmitAnswer.setEnabled(false);
+                        } else {
+                            currentIndex = 0;
+                            score = 0;
+                            isAnswerSubmitted = false;
+                            showQuestion();
+                        }
+                    });
+                }
+                return;
+            }
+
+            // Perform AI regeneration
+            // We'll use 10 questions by default for regeneration
+            new GeminiApiService().generateDeck(deck.notes, 10, new GeminiApiService.ApiCallback() {
+                @Override
+                public void onSuccess(List<com.yourgroup.studypulseai.data.model.Flashcard> flashcards, List<QuizQuestion> questions) {
+                    new Thread(() -> {
+                        // Clear old questions and insert new ones
+                        db.deckDao().deleteQuizQuestionsByDeck(deckId);
+                        for (QuizQuestion q : questions) {
+                            q.setDeckId(deckId);
+                        }
+                        db.deckDao().insertQuizQuestions(questions);
+
+                        if (getActivity() != null) {
+                            getActivity().runOnUiThread(() -> {
+                                loadingDialog.dismiss();
+                                quizQuestions = questions;
+                                currentIndex = 0;
+                                score = 0;
+                                isAnswerSubmitted = false;
+                                showQuestion();
+                            });
+                        }
+                    }).start();
+                }
+
+                @Override
+                public void onError(String message) {
+                    if (getActivity() != null) {
+                        getActivity().runOnUiThread(() -> {
+                            loadingDialog.dismiss();
+                            Toast.makeText(getContext(), "Regeneration failed. Loading old questions.", Toast.LENGTH_SHORT).show();
+                            // Fallback to old questions
+                            loadExistingQuestionsSync(db);
+                        });
+                    }
+                }
+            });
+        }).start();
+    }
+
+    private void loadExistingQuestionsSync(AppDatabase db) {
+        new Thread(() -> {
+            List<QuizQuestion> loaded = db.deckDao().getQuizQuestionsByDeck(deckId);
             if (getActivity() != null) {
                 getActivity().runOnUiThread(() -> {
                     quizQuestions = loaded;
                     if (quizQuestions.isEmpty()) {
-                        tvQuestion.setText("No quiz questions available for this deck. Please generate a new deck with questions.");
-                        tvQuizCounter.setText("0 / 0");
-                        optionA.setVisibility(View.GONE);
-                        optionB.setVisibility(View.GONE);
-                        optionC.setVisibility(View.GONE);
-                        optionD.setVisibility(View.GONE);
+                        tvQuestion.setText("No quiz questions available.");
                         btnSubmitAnswer.setEnabled(false);
                     } else {
                         currentIndex = 0;
                         score = 0;
+                        userAnswers.clear();
                         isAnswerSubmitted = false;
                         showQuestion();
                     }
@@ -166,6 +243,7 @@ public class QuizFragment extends Fragment {
                 break;
             }
         }
+        userAnswers.add(selectedIndex);
 
         // Disable all radio buttons
         for (RadioButton button : buttons) {
@@ -204,7 +282,7 @@ public class QuizFragment extends Fragment {
         } else {
             // End of quiz
             int scorePercentage = (int) (((float) score / quizQuestions.size()) * 100);
-            ProgressManager.recordQuizResult(requireContext(), deckId, scorePercentage);
+            ProgressManager.recordQuizResult(requireContext(), deckId, scorePercentage, quizQuestions, userAnswers);
 
             quizProgress.setProgress(100);
 

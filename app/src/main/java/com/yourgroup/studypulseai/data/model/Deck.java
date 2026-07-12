@@ -10,6 +10,7 @@ public class Deck {
     public int id;
     public String title;
     public String backgroundImage;
+    public String notes; // Source text for AI generation
     public long createdAt;
 
     public Deck() {
@@ -21,6 +22,13 @@ public class Deck {
         this.createdAt = System.currentTimeMillis();
     }
 
+    public Deck(String title, String backgroundImage, String notes) {
+        this.title = title;
+        this.backgroundImage = backgroundImage;
+        this.notes = notes;
+        this.createdAt = System.currentTimeMillis();
+    }
+
     // Getters and setters for the Deck class fields
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
@@ -28,6 +36,8 @@ public class Deck {
     public void setTitle(String title) { this.title = title; }
     public String getBackgroundImage() { return backgroundImage; }
     public void setBackgroundImage(String backgroundImage) { this.backgroundImage = backgroundImage; }
+    public String getNotes() { return notes; }
+    public void setNotes(String notes) { this.notes = notes; }
     public long getCreatedAt() { return createdAt; }
     public void setCreatedAt(long createdAt) { this.createdAt = createdAt; }
 }

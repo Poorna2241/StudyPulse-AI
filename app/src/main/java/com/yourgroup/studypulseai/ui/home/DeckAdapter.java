@@ -23,6 +23,7 @@ public class DeckAdapter extends RecyclerView.Adapter<DeckAdapter.DeckViewHolder
     private final OnDeckClickListener listener;
 
     public interface OnDeckClickListener {
+        void onDeckClick(Deck deck);
         void onStudyClick(Deck deck);
         void onQuizClick(Deck deck);
         void onDeleteClick(Deck deck);
@@ -79,6 +80,7 @@ public class DeckAdapter extends RecyclerView.Adapter<DeckAdapter.DeckViewHolder
         holder.btnStudy.setOnClickListener(v -> listener.onStudyClick(deck));
         holder.btnQuiz.setOnClickListener(v -> listener.onQuizClick(deck));
         holder.btnDelete.setOnClickListener(v -> listener.onDeleteClick(deck));
+        holder.itemView.setOnClickListener(v -> listener.onDeckClick(deck));
     }
 
     @Override
