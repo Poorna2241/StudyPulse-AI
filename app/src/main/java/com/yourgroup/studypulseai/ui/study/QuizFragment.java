@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class QuizFragment extends Fragment {
-    private TextView tvQuestion;
+    private TextView tvQuestion, tvQuizCounter;
     private RadioGroup radioOptions;
     private RadioButton optionA, optionB, optionC, optionD;
     private MaterialButton btnSubmitAnswer;
@@ -52,6 +52,7 @@ public class QuizFragment extends Fragment {
         }
 
         tvQuestion = view.findViewById(R.id.tvQuestion);
+        tvQuizCounter = view.findViewById(R.id.tvQuizCounter);
         radioOptions = view.findViewById(R.id.radioOptions);
         optionA = view.findViewById(R.id.optionA);
         optionB = view.findViewById(R.id.optionB);
@@ -89,6 +90,7 @@ public class QuizFragment extends Fragment {
                     quizQuestions = loaded;
                     if (quizQuestions.isEmpty()) {
                         tvQuestion.setText("No quiz questions available for this deck. Please generate a new deck with questions.");
+                        tvQuizCounter.setText("0 / 0");
                         optionA.setVisibility(View.GONE);
                         optionB.setVisibility(View.GONE);
                         optionC.setVisibility(View.GONE);
@@ -132,6 +134,7 @@ public class QuizFragment extends Fragment {
         isAnswerSubmitted = false;
         btnSubmitAnswer.setText("Submit Answer");
 
+        tvQuizCounter.setText((currentIndex + 1) + " / " + quizQuestions.size());
         int progress = (int) (((float) currentIndex / quizQuestions.size()) * 100);
         quizProgress.setProgress(progress);
     }

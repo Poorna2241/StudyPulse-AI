@@ -271,11 +271,6 @@ public class NewDeckFragment extends Fragment {
                                     }
                                     AppDatabase.getInstance(requireContext()).deckDao().insertQuizQuestions(questions);
 
-                                    for (QuizQuestion q : questions) {
-                                        q.setDeckId((int) localId);
-                                    }
-                                    AppDatabase.getInstance(requireContext()).deckDao().insertQuizQuestions(questions);
-
                                      requireActivity().runOnUiThread(() -> {
                                          if (getView() == null) return; // fragment view destroyed before we got back to the UI thread
 
