@@ -28,6 +28,7 @@ import com.yourgroup.studypulseai.network.GeminiApiService;
 import com.yourgroup.studypulseai.util.ProgressManager;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class QuizFragment extends Fragment {
@@ -42,6 +43,7 @@ public class QuizFragment extends Fragment {
     private int currentIndex = 0;
     private int score = 0;
     private int deckId = -1;
+    private int currentCorrectIndex = -1; // New field to track shuffled correct index
     private String deckTitle = "";
     private boolean isAnswerSubmitted = false;
 
@@ -146,7 +148,11 @@ public class QuizFragment extends Fragment {
                 return;
             }
 
-            new GeminiApiService().generateDeck(deck.getNotes(), 10, new GeminiApiService.ApiCallback() {
+            // Perform AI regeneration
+            // Use the original question count requested for this deck
+            int count = (deck.getQuestionCount() > 0) ? deck.getQuestionCount() : 10;
+
+            new GeminiApiService().generateDeck(deck.getNotes(), count, new GeminiApiService.ApiCallback() {
                 @Override
                 public void onSuccess(List<com.yourgroup.studypulseai.data.model.Flashcard> flashcards, List<QuizQuestion> questions) {
                     new Thread(() -> {
@@ -213,20 +219,36 @@ public class QuizFragment extends Fragment {
         tvQuestion.setText(current.getQuestion());
 
         RadioButton[] buttons = {optionA, optionB, optionC, optionD};
-        List<String> options = current.getOptions();
+        List<String> originalOptions = current.getOptions();
+        int originalCorrectIndex = current.getCorrectIndex();
+
+        // Shuffle options to prevent predictability
+        List<Integer> indices = new ArrayList<>();
+        for (int i = 0; i < originalOptions.size(); i++) indices.add(i);
+        Collections.shuffle(indices);
+
+        List<String> shuffledOptions = new ArrayList<>();
+        currentCorrectIndex = -1;
+
+        for (int i = 0; i < indices.size(); i++) {
+            int oldIndex = indices.get(i);
+            shuffledOptions.add(originalOptions.get(oldIndex));
+            if (oldIndex == originalCorrectIndex) {
+                currentCorrectIndex = i;
+            }
+        }
 
         for (int i = 0; i < buttons.length; i++) {
             buttons[i].setVisibility(View.GONE);
             buttons[i].setChecked(false);
             buttons[i].setEnabled(true);
-            // Reset text color to default
             buttons[i].setTextColor(getResources().getColor(R.color.text_primary, null));
-            buttons[i].setButtonTintList(null); // Reset tints
+            buttons[i].setButtonTintList(null);
         }
 
-        for (int i = 0; i < Math.min(options.size(), buttons.length); i++) {
+        for (int i = 0; i < Math.min(shuffledOptions.size(), buttons.length); i++) {
             buttons[i].setVisibility(View.VISIBLE);
-            buttons[i].setText(options.get(i));
+            buttons[i].setText(shuffledOptions.get(i));
         }
 
         radioOptions.clearCheck();
@@ -246,8 +268,7 @@ public class QuizFragment extends Fragment {
         }
 
         isAnswerSubmitted = true;
-        QuizQuestion current = quizQuestions.get(currentIndex);
-        int correctIndex = current.getCorrectIndex();
+        int correctIndex = currentCorrectIndex; // Use the shuffled correct index
 
         RadioButton[] buttons = {optionA, optionB, optionC, optionD};
         int selectedIndex = -1;

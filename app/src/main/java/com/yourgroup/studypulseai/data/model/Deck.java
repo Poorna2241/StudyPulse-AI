@@ -11,6 +11,7 @@ public class Deck {
     public String title;
     public String backgroundImage;
     public String notes; // Source text for AI generation
+    public int questionCount; // Target number of quiz questions/flashcards
     public long createdAt;
 
     public Deck() {
@@ -22,10 +23,11 @@ public class Deck {
         this.createdAt = System.currentTimeMillis();
     }
 
-    public Deck(String title, String backgroundImage, String notes) {
+    public Deck(String title, String backgroundImage, String notes, int questionCount) {
         this.title = title;
         this.backgroundImage = backgroundImage;
         this.notes = notes;
+        this.questionCount = questionCount;
         this.createdAt = System.currentTimeMillis();
     }
 
@@ -38,6 +40,8 @@ public class Deck {
     public void setBackgroundImage(String backgroundImage) { this.backgroundImage = backgroundImage; }
     public String getNotes() { return notes; }
     public void setNotes(String notes) { this.notes = notes; }
+    public int getQuestionCount() { return questionCount; }
+    public void setQuestionCount(int questionCount) { this.questionCount = questionCount; }
     public long getCreatedAt() { return createdAt; }
     public void setCreatedAt(long createdAt) { this.createdAt = createdAt; }
 }
