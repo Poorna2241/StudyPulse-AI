@@ -32,7 +32,7 @@ import android.util.Log;
 
 public class ProgressFragment extends Fragment {
     private static final String TAG = "ProgressFragment";
-    private TextView tvStreakValue, tvMasteryValue, tvCardsValue, tvQuizzesValue;
+    private TextView tvStreakValue, tvMasteryValue, tvCardsValue, tvQuizzesValue, tvAIPulseAdvice;
     private LinearLayout llSubjectProgress;
     private Button btnRefresher;
     private DeckDao deckDao;
@@ -56,6 +56,7 @@ public class ProgressFragment extends Fragment {
         tvMasteryValue = view.findViewById(R.id.tvMasteryValue);
         tvCardsValue = view.findViewById(R.id.tvCardsValue);
         tvQuizzesValue = view.findViewById(R.id.tvQuizzesValue);
+        tvAIPulseAdvice = view.findViewById(R.id.tvAIPulseAdvice);
         llSubjectProgress = view.findViewById(R.id.llSubjectProgress);
         btnRefresher = view.findViewById(R.id.btnRefresher);
 
@@ -97,7 +98,15 @@ public class ProgressFragment extends Fragment {
         deckDao = AppDatabase.getInstance(requireContext()).deckDao();
 
         btnRefresher.setOnClickListener(v -> {
-            // Handle refresher quiz navigation
+            try {
+                androidx.navigation.Navigation.findNavController(requireView())
+                        .navigate(R.id.action_progressFragment_to_homeFragment);
+            } catch (Exception e) {
+                // If navigation fails, fallback to simple back
+                if (getActivity() != null) {
+                    getActivity().onBackPressed();
+                }
+            }
         });
 
         return view;
@@ -289,8 +298,43 @@ public class ProgressFragment extends Fragment {
                 updateForecastView(forecastDay7, forecastedCount[6]);
                 
                 updateSubjectProgress(finalDecksList, masteryMap);
+                updateAIAdvice(streak, masteryPercent, totalCards, finalDecksList, masteryMap);
             });
         }).start();
+    }
+
+    private void updateAIAdvice(int streak, int mastery, int totalCards, List<Deck> decks, java.util.Map<Integer, Integer> masteryMap) {
+        if (totalCards == 0 || decks.isEmpty()) {
+            tvAIPulseAdvice.setText("Start your learning journey by creating your first deck and taking a quiz!");
+            return;
+        }
+
+        String advice;
+        if (streak >= 3) {
+            advice = "You're on fire! " + streak + " days of consistency. Keep pushing to reach 100% mastery.";
+        } else if (mastery > 80) {
+            advice = "Incredible mastery levels! You've conquered most of your cards. Try a refresher quiz to stay sharp.";
+        } else {
+            // Find lowest mastery subject
+            Deck lowest = null;
+            int minMastery = 101;
+            for (Deck d : decks) {
+                Integer mObj = masteryMap.get(d.getId());
+                if (mObj != null) {
+                    int m = mObj;
+                    if (m < minMastery) {
+                        minMastery = m;
+                        lowest = d;
+                    }
+                }
+            }
+            if (lowest != null && minMastery < 50) {
+                advice = "You're crushing it, but " + lowest.getTitle() + " needs some love. Focus on those cards today!";
+            } else {
+                advice = "Great progress today! Keep reviewing your cards to build long-term memory.";
+            }
+        }
+        tvAIPulseAdvice.setText(advice);
     }
 
     private void setupBarClickListeners() {

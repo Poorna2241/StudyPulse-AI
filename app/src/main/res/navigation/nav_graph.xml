@@ -57,7 +57,13 @@
     <fragment
         android:id="@+id/progressFragment"
         android:name="com.yourgroup.studypulseai.ui.progress.ProgressFragment"
-        android:label="Progress" />
+        android:label="Progress">
+        <action
+            android:id="@+id/action_progressFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
 
     <fragment
         android:id="@+id/settingsFragment"
