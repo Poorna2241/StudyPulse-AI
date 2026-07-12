@@ -8,6 +8,9 @@ import android.widget.TextView;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -36,6 +39,7 @@ public class ProgressFragment extends Fragment {
     private DonutChartView donutChartView;
     private TextView tvDonutMasteryValue;
     private LineChartView lineChartView;
+    private Spinner spinnerDeckFilter;
 
     private View barMon, barTue, barWed, barThu, barFri, barSat, barSun;
     private View forecastDay1, forecastDay2, forecastDay3, forecastDay4, forecastDay5, forecastDay6, forecastDay7;
@@ -56,6 +60,7 @@ public class ProgressFragment extends Fragment {
         donutChartView = view.findViewById(R.id.donutChartView);
         tvDonutMasteryValue = view.findViewById(R.id.tvDonutMasteryValue);
         lineChartView = view.findViewById(R.id.lineChartView);
+        spinnerDeckFilter = view.findViewById(R.id.spinnerDeckFilter);
 
         // Weekly activity bars
         barMon = view.findViewById(R.id.barMon);
@@ -142,29 +147,35 @@ public class ProgressFragment extends Fragment {
                 }
             }
 
-            // Fetch quiz performance scores (recent 7 quiz scores in chronological order)
+            // Fetch recent quiz scores for "All" initial view
             List<QuizResult> results = deckDao.getAllQuizResults();
-            List<Integer> quizScores = new ArrayList<>();
+            List<Integer> initialQuizScores = new ArrayList<>();
             if (results != null) {
-                int limit = Math.min(results.size(), 7);
+                int limit = Math.min(results.size(), 10);
                 for (int i = 0; i < limit; i++) {
-                    quizScores.add(results.get(i).getScore());
+                    initialQuizScores.add(results.get(i).getScore());
                 }
-                Collections.reverse(quizScores); // Chronological order
+                Collections.reverse(initialQuizScores); // Chronological order
             }
             
-            List<Deck> decks = deckDao.getAllDecks();
+            List<Deck> decksList = deckDao.getAllDecks();
+            List<String> deckTitles = new ArrayList<>();
+            deckTitles.add("All Decks");
+            for (Deck d : decksList) {
+                deckTitles.add(d.getTitle());
+            }
+
             java.util.Map<Integer, Integer> masteryMap = new java.util.HashMap<>();
             final List<Deck> finalDecksList;
-            if (decks.isEmpty()) {
+            if (decksList.isEmpty()) {
                 Deck placeholderDeck = new Deck("Computer Science", "c1");
                 placeholderDeck.setId(-999);
                 finalDecksList = new java.util.ArrayList<>();
                 finalDecksList.add(placeholderDeck);
                 masteryMap.put(-999, 75);
             } else {
-                finalDecksList = decks;
-                for (Deck deck : decks) {
+                finalDecksList = decksList;
+                for (Deck deck : decksList) {
                     List<com.yourgroup.studypulseai.data.model.Flashcard> cards = deckDao.getFlashcardsByDeck(deck.getId());
                     int deckMastery = 0;
                     if (cards != null && !cards.isEmpty()) {
@@ -189,7 +200,57 @@ public class ProgressFragment extends Fragment {
                 // Feed real-time data to Donut and Line charts
                 donutChartView.setData(strugglingCards, learningCards, masteredCards);
                 tvDonutMasteryValue.setText(getString(R.string.mastery_percentage_template, masteryPercent));
-                lineChartView.setScores(quizScores);
+                lineChartView.setScores(initialQuizScores);
+
+                // Setup Spinner
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(),
+                        android.R.layout.simple_spinner_item, deckTitles);
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinnerDeckFilter.setAdapter(adapter);
+
+                spinnerDeckFilter.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        new Thread(() -> {
+                            List<Integer> filteredScores = new ArrayList<>();
+                            List<String> filteredLabels = new ArrayList<>();
+
+                            if (position == 0) {
+                                // All Decks - Show Latest Result per Deck
+                                List<Deck> allDecks = deckDao.getAllDecks();
+                                for (Deck d : allDecks) {
+                                    QuizResult latest = deckDao.getLatestQuizResultForDeck(d.getId());
+                                    if (latest != null) {
+                                        filteredScores.add(latest.getScore());
+                                        filteredLabels.add(d.getTitle());
+                                    }
+                                }
+                            } else {
+                                // Specific Deck - Show all attempts for this deck
+                                Deck selected = decksList.get(position - 1);
+                                List<QuizResult> results = deckDao.getQuizResultsByDeck(selected.getId());
+                                if (results != null) {
+                                    for (int i = 0; i < results.size(); i++) {
+                                        filteredScores.add(results.get(i).getScore());
+                                        filteredLabels.add("A" + (i + 1)); // Attempt 1, 2, 3...
+                                    }
+                                }
+                            }
+
+                            if (getActivity() != null) {
+                                getActivity().runOnUiThread(() -> {
+                                    lineChartView.setScores(filteredScores, filteredLabels);
+                                    // Hide the static axis label container if we have specific labels
+                                    View labelsContainer = getView().findViewById(R.id.llChartLabels);
+                                    if (labelsContainer != null) {
+                                        labelsContainer.setVisibility(filteredLabels.isEmpty() ? View.VISIBLE : View.GONE);
+                                    }
+                                });
+                            }
+                        }).start();
+                    }
+                    @Override public void onNothingSelected(AdapterView<?> parent) {}
+                });
 
                 // Update Weekly Activity Bar Heights
                 updateBarWeight(barMon, dailyMinutes[0]);

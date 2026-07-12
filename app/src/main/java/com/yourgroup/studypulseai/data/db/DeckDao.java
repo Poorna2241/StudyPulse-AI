@@ -48,6 +48,12 @@ public interface DeckDao {
     @Query("SELECT COUNT(*) FROM quiz_results")
     int getTotalQuizzesTaken();
 
+    @Query("SELECT * FROM quiz_results WHERE deckId = :deckId ORDER BY timestamp ASC")
+    List<QuizResult> getQuizResultsByDeck(int deckId);
+
+    @Query("SELECT * FROM quiz_results WHERE deckId = :deckId ORDER BY timestamp DESC LIMIT 1")
+    QuizResult getLatestQuizResultForDeck(int deckId);
+
     @Query("SELECT AVG(score) FROM quiz_results")
     double getAverageQuizScore();
 
