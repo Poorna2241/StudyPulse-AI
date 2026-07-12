@@ -70,8 +70,8 @@ public interface DeckDao {
     @Query("SELECT SUM(actionCount) FROM study_activity")
     int getTotalActionCount();
 
-    @Query("SELECT * FROM study_activity WHERE dateMillis = :todayStart LIMIT 1")
-    StudyActivity getActivityForDate(long todayStart);
+    @Query("SELECT * FROM study_activity WHERE dateMillis >= :dayStart AND dateMillis < :dayEnd LIMIT 1")
+    StudyActivity getActivityForDateRange(long dayStart, long dayEnd);
 
     @Update
     void updateStudyActivity(StudyActivity activity);

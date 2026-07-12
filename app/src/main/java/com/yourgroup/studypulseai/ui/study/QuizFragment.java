@@ -72,8 +72,16 @@ public class QuizFragment extends Fragment {
         });
 
         loadQuizQuestions();
+        
+        ProgressManager.startSession();
 
         return view;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ProgressManager.endSession(requireContext());
     }
 
     private void loadQuizQuestions() {

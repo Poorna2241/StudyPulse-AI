@@ -70,8 +70,8 @@
     <string name="axis_50">50%</string>
     <string name="axis_0">0%</string>
     <string name="label_mins">mins</string>
-    <string name="axis_60">60</string>
-    <string name="axis_30">30</string>
+    <string name="axis_60">240</string>
+    <string name="axis_30">120</string>
     <string name="axis_0_num">0</string>
     <string name="mastery_percentage_template">%1$d%%</string>
     <string name="action_delete">Delete</string>

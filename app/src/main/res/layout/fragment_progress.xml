@@ -471,13 +471,40 @@
                                 android:gravity="bottom"
                                 android:orientation="horizontal">
 
-                                <View android:id="@+id/barMon" android:layout_width="0dp" android:layout_height="0dp" android:layout_weight="1" android:layout_margin="4dp" android:background="@color/primary"/>
-                                <View android:id="@+id/barTue" android:layout_width="0dp" android:layout_height="0dp" android:layout_weight="1" android:layout_margin="4dp" android:background="@color/primary"/>
-                                <View android:id="@+id/barWed" android:layout_width="0dp" android:layout_height="0dp" android:layout_weight="1" android:layout_margin="4dp" android:background="@color/primary"/>
-                                <View android:id="@+id/barThu" android:layout_width="0dp" android:layout_height="0dp" android:layout_weight="1" android:layout_margin="4dp" android:background="@color/primary"/>
-                                <View android:id="@+id/barFri" android:layout_width="0dp" android:layout_height="0dp" android:layout_weight="1" android:layout_margin="4dp" android:background="@color/primary"/>
-                                <View android:id="@+id/barSat" android:layout_width="0dp" android:layout_height="0dp" android:layout_weight="1" android:layout_margin="4dp" android:background="@color/primary"/>
-                                <View android:id="@+id/barSun" android:layout_width="0dp" android:layout_height="0dp" android:layout_weight="1" android:layout_margin="4dp" android:background="@color/primary"/>
+                                <LinearLayout android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:orientation="vertical" android:gravity="bottom">
+                                    <TextView android:id="@+id/tvMinsMon" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center_horizontal" android:textSize="10sp" android:textColor="@color/primary" android:visibility="invisible" android:text="0m"/>
+                                    <View android:id="@+id/barMon" android:layout_width="match_parent" android:layout_height="0dp" android:layout_margin="4dp" android:background="@color/primary" android:clickable="true" android:focusable="true"/>
+                                </LinearLayout>
+
+                                <LinearLayout android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:orientation="vertical" android:gravity="bottom">
+                                    <TextView android:id="@+id/tvMinsTue" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center_horizontal" android:textSize="10sp" android:textColor="@color/primary" android:visibility="invisible" android:text="0m"/>
+                                    <View android:id="@+id/barTue" android:layout_width="match_parent" android:layout_height="0dp" android:layout_margin="4dp" android:background="@color/primary" android:clickable="true" android:focusable="true"/>
+                                </LinearLayout>
+
+                                <LinearLayout android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:orientation="vertical" android:gravity="bottom">
+                                    <TextView android:id="@+id/tvMinsWed" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center_horizontal" android:textSize="10sp" android:textColor="@color/primary" android:visibility="invisible" android:text="0m"/>
+                                    <View android:id="@+id/barWed" android:layout_width="match_parent" android:layout_height="0dp" android:layout_margin="4dp" android:background="@color/primary" android:clickable="true" android:focusable="true"/>
+                                </LinearLayout>
+
+                                <LinearLayout android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:orientation="vertical" android:gravity="bottom">
+                                    <TextView android:id="@+id/tvMinsThu" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center_horizontal" android:textSize="10sp" android:textColor="@color/primary" android:visibility="invisible" android:text="0m"/>
+                                    <View android:id="@+id/barThu" android:layout_width="match_parent" android:layout_height="0dp" android:layout_margin="4dp" android:background="@color/primary" android:clickable="true" android:focusable="true"/>
+                                </LinearLayout>
+
+                                <LinearLayout android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:orientation="vertical" android:gravity="bottom">
+                                    <TextView android:id="@+id/tvMinsFri" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center_horizontal" android:textSize="10sp" android:textColor="@color/primary" android:visibility="invisible" android:text="0m"/>
+                                    <View android:id="@+id/barFri" android:layout_width="match_parent" android:layout_height="0dp" android:layout_margin="4dp" android:background="@color/primary" android:clickable="true" android:focusable="true"/>
+                                </LinearLayout>
+
+                                <LinearLayout android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:orientation="vertical" android:gravity="bottom">
+                                    <TextView android:id="@+id/tvMinsSat" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center_horizontal" android:textSize="10sp" android:textColor="@color/primary" android:visibility="invisible" android:text="0m"/>
+                                    <View android:id="@+id/barSat" android:layout_width="match_parent" android:layout_height="0dp" android:layout_margin="4dp" android:background="@color/primary" android:clickable="true" android:focusable="true"/>
+                                </LinearLayout>
+
+                                <LinearLayout android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:orientation="vertical" android:gravity="bottom">
+                                    <TextView android:id="@+id/tvMinsSun" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center_horizontal" android:textSize="10sp" android:textColor="@color/primary" android:visibility="invisible" android:text="0m"/>
+                                    <View android:id="@+id/barSun" android:layout_width="match_parent" android:layout_height="0dp" android:layout_margin="4dp" android:background="@color/primary" android:clickable="true" android:focusable="true"/>
+                                </LinearLayout>
                             </LinearLayout>
 
                             <!-- Horizontal Axis Labels -->
@@ -496,14 +523,6 @@
                             </LinearLayout>
                         </LinearLayout>
                     </LinearLayout>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="end"
-                        android:text="@string/label_mins"
-                        android:textSize="11sp"
-                        android:textColor="@color/static_text_secondary"
-                        android:textStyle="italic" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
