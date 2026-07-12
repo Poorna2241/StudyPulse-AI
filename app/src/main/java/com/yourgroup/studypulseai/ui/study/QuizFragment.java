@@ -23,6 +23,7 @@ import com.yourgroup.studypulseai.R;
 import com.yourgroup.studypulseai.data.db.AppDatabase;
 import com.yourgroup.studypulseai.data.model.Deck;
 import com.yourgroup.studypulseai.data.model.QuizQuestion;
+import com.yourgroup.studypulseai.data.model.QuizResult;
 import com.yourgroup.studypulseai.network.GeminiApiService;
 import com.yourgroup.studypulseai.util.ProgressManager;
 
@@ -93,50 +94,62 @@ public class QuizFragment extends Fragment {
             return;
         }
 
-        // Show a loading dialog during AI regeneration
         AlertDialog loadingDialog = new AlertDialog.Builder(requireContext())
-                .setMessage("Regenerating fresh questions for your quiz...")
+                .setMessage("Preparing your quiz...")
                 .setCancelable(false)
                 .create();
         loadingDialog.show();
 
         new Thread(() -> {
             AppDatabase db = AppDatabase.getInstance(requireContext());
-            Deck deck = db.deckDao().getDeckById(deckId);
             
-            if (deck == null || deck.notes == null || deck.notes.isEmpty()) {
-                // Fallback to loading existing questions if notes are missing
+            // Check if there are ANY previous quiz results for this deck
+            List<QuizResult> existingResults = db.deckDao().getQuizResultsForDeck(deckId);
+            boolean hasTakenQuizBefore = existingResults != null && !existingResults.isEmpty();
+
+            if (!hasTakenQuizBefore) {
+                // FIRST TIME: Just load the questions that were generated when the deck was created
                 List<QuizQuestion> loaded = db.deckDao().getQuizQuestionsByDeck(deckId);
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(() -> {
                         loadingDialog.dismiss();
                         quizQuestions = loaded;
                         if (quizQuestions.isEmpty()) {
-                            tvQuestion.setText("No quiz questions available for this deck. Please generate a new deck with questions.");
-                            tvQuizCounter.setText("0 / 0");
-                            optionA.setVisibility(View.GONE);
-                            optionB.setVisibility(View.GONE);
-                            optionC.setVisibility(View.GONE);
-                            optionD.setVisibility(View.GONE);
-                            btnSubmitAnswer.setEnabled(false);
+                            // If for some reason they are missing, try to regenerate anyway
+                            regenerateQuiz(db, null);
                         } else {
                             currentIndex = 0;
                             score = 0;
+                            userAnswers.clear();
                             isAnswerSubmitted = false;
                             showQuestion();
                         }
                     });
                 }
+            } else {
+                // SUBSEQUENT TIMES: Regenerate completely fresh questions
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        loadingDialog.setMessage("Regenerating fresh questions for your quiz...");
+                        regenerateQuiz(db, loadingDialog);
+                    });
+                }
+            }
+        }).start();
+    }
+
+    private void regenerateQuiz(AppDatabase db, AlertDialog loadingDialog) {
+        new Thread(() -> {
+            Deck deck = db.deckDao().getDeckById(deckId);
+            if (deck == null || deck.getNotes() == null || deck.getNotes().isEmpty()) {
+                loadExistingQuestionsSync(db, loadingDialog);
                 return;
             }
 
-            // Perform AI regeneration
-            // We'll use 10 questions by default for regeneration
-            new GeminiApiService().generateDeck(deck.notes, 10, new GeminiApiService.ApiCallback() {
+            new GeminiApiService().generateDeck(deck.getNotes(), 10, new GeminiApiService.ApiCallback() {
                 @Override
                 public void onSuccess(List<com.yourgroup.studypulseai.data.model.Flashcard> flashcards, List<QuizQuestion> questions) {
                     new Thread(() -> {
-                        // Clear old questions and insert new ones
                         db.deckDao().deleteQuizQuestionsByDeck(deckId);
                         for (QuizQuestion q : questions) {
                             q.setDeckId(deckId);
@@ -145,10 +158,11 @@ public class QuizFragment extends Fragment {
 
                         if (getActivity() != null) {
                             getActivity().runOnUiThread(() -> {
-                                loadingDialog.dismiss();
+                                if (loadingDialog != null) loadingDialog.dismiss();
                                 quizQuestions = questions;
                                 currentIndex = 0;
                                 score = 0;
+                                userAnswers.clear();
                                 isAnswerSubmitted = false;
                                 showQuestion();
                             });
@@ -160,10 +174,9 @@ public class QuizFragment extends Fragment {
                 public void onError(String message) {
                     if (getActivity() != null) {
                         getActivity().runOnUiThread(() -> {
-                            loadingDialog.dismiss();
-                            Toast.makeText(getContext(), "Regeneration failed. Loading old questions.", Toast.LENGTH_SHORT).show();
-                            // Fallback to old questions
-                            loadExistingQuestionsSync(db);
+                            if (loadingDialog != null) loadingDialog.dismiss();
+                            Toast.makeText(getContext(), "Regeneration failed. Loading last questions.", Toast.LENGTH_SHORT).show();
+                            loadExistingQuestionsSync(db, null);
                         });
                     }
                 }
@@ -171,11 +184,12 @@ public class QuizFragment extends Fragment {
         }).start();
     }
 
-    private void loadExistingQuestionsSync(AppDatabase db) {
+    private void loadExistingQuestionsSync(AppDatabase db, AlertDialog loadingDialog) {
         new Thread(() -> {
             List<QuizQuestion> loaded = db.deckDao().getQuizQuestionsByDeck(deckId);
             if (getActivity() != null) {
                 getActivity().runOnUiThread(() -> {
+                    if (loadingDialog != null) loadingDialog.dismiss();
                     quizQuestions = loaded;
                     if (quizQuestions.isEmpty()) {
                         tvQuestion.setText("No quiz questions available.");

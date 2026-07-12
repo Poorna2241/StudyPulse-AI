@@ -429,15 +429,6 @@
                             android:textColor="@color/text_primary"
                             android:textSize="16sp"
                             android:textStyle="bold" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true"
-                            android:text="@string/label_mins"
-                            android:textSize="11sp"
-                            android:textColor="@color/static_text_secondary"
-                            android:textStyle="italic" />
                     </RelativeLayout>
 
                     <LinearLayout
@@ -445,6 +436,19 @@
                         android:layout_height="140dp"
                         android:layout_marginTop="16dp"
                         android:orientation="horizontal">
+
+                        <!-- Y-Axis Label (Middle-Left) -->
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:text="@string/label_mins"
+                            android:textSize="11sp"
+                            android:textColor="@color/static_text_secondary"
+                            android:textStyle="italic"
+                            android:rotation="270"
+                            android:layout_marginStart="-12dp"
+                            android:layout_marginEnd="-12dp" />
 
                         <!-- Y-Axis (Activity Level / Minutes) -->
                         <LinearLayout
