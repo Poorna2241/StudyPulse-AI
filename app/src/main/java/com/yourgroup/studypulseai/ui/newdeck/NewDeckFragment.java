@@ -260,17 +260,12 @@ public class NewDeckFragment extends Fragment {
                                 if (getContext() == null) return;
 
                                 try {
-                                    Deck localDeck = new Deck(finalTitle, randomBg);
+                                    Deck localDeck = new Deck(finalTitle, randomBg, notes, count);
                                     long localId = AppDatabase.getInstance(requireContext()).deckDao().insertDeck(localDeck);
                                     for (Flashcard f : flashcards) {
                                         f.setDeckId((int) localId);
                                         AppDatabase.getInstance(requireContext()).deckDao().insertFlashcard(f);
                                     }
-                                    for (QuizQuestion q : questions) {
-                                        q.setDeckId((int) localId);
-                                    }
-                                    AppDatabase.getInstance(requireContext()).deckDao().insertQuizQuestions(questions);
-
                                     for (QuizQuestion q : questions) {
                                         q.setDeckId((int) localId);
                                     }

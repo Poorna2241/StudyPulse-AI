@@ -57,6 +57,12 @@ public class HomeFragment extends Fragment {
 
     private void setupRecyclerView() {
         adapter = new DeckAdapter(new DeckAdapter.OnDeckClickListener() {
+            @Override public void onDeckClick(Deck deck) {
+                Bundle args = new Bundle();
+                args.putInt("deckId", deck.getId());
+                args.putString("deckTitle", deck.getTitle());
+                Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_deckHistoryFragment, args);
+            }
             @Override public void onStudyClick(Deck deck) {
                 Bundle args = new Bundle();
                 args.putInt("deckId", deck.getId());

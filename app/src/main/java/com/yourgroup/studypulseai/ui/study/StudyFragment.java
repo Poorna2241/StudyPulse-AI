@@ -56,6 +56,7 @@ public class StudyFragment extends Fragment {
 
         flashCard.setOnClickListener(v -> {
             if (!flashcards.isEmpty()) {
+                android.util.Log.e("StudyFragment", "Card clicked! Recording action...");
                 flipCard();
                 ProgressManager.recordAction(requireContext());
             }
@@ -84,8 +85,16 @@ public class StudyFragment extends Fragment {
 
         setupMasteryListeners();
         loadFlashcards();
+        
+        ProgressManager.startSession();
 
         return view;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ProgressManager.endSession(requireContext());
     }
 
     private void loadFlashcards() {

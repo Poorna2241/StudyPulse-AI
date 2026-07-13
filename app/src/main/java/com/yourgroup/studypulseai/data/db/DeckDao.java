@@ -8,6 +8,7 @@ import com.yourgroup.studypulseai.data.model.Deck;
 import com.yourgroup.studypulseai.data.model.Flashcard;
 import com.yourgroup.studypulseai.data.model.QuizResult;
 import com.yourgroup.studypulseai.data.model.QuizQuestion;
+import com.yourgroup.studypulseai.data.model.QuizAttemptQuestion;
 import com.yourgroup.studypulseai.data.model.StudyActivity;
 import java.util.List;
 
@@ -18,6 +19,9 @@ public interface DeckDao {
 
     @Query("SELECT * FROM decks ORDER BY createdAt DESC")
     List<Deck> getAllDecks();
+
+    @Query("SELECT * FROM decks WHERE id = :deckId LIMIT 1")
+    Deck getDeckById(int deckId);
 
     @Query("DELETE FROM decks WHERE id = :deckId")
     void deleteDeck(int deckId);
@@ -40,16 +44,32 @@ public interface DeckDao {
 
     // Quiz Results
     @Insert
-    void insertQuizResult(QuizResult result);
+    long insertQuizResult(QuizResult result);
 
     @Query("SELECT * FROM quiz_results ORDER BY timestamp DESC")
     List<QuizResult> getAllQuizResults();
 
+    @Query("SELECT * FROM quiz_results WHERE deckId = :deckId ORDER BY timestamp DESC")
+    List<QuizResult> getQuizResultsForDeck(int deckId);
+
     @Query("SELECT COUNT(*) FROM quiz_results")
     int getTotalQuizzesTaken();
 
+    @Query("SELECT * FROM quiz_results WHERE deckId = :deckId ORDER BY timestamp ASC")
+    List<QuizResult> getQuizResultsByDeck(int deckId);
+
+    @Query("SELECT * FROM quiz_results WHERE deckId = :deckId ORDER BY timestamp DESC LIMIT 1")
+    QuizResult getLatestQuizResultForDeck(int deckId);
+
     @Query("SELECT AVG(score) FROM quiz_results")
     double getAverageQuizScore();
+
+    // Quiz Attempt Details
+    @Insert
+    void insertQuizAttemptQuestions(List<QuizAttemptQuestion> questions);
+
+    @Query("SELECT * FROM quiz_attempt_questions WHERE resultId = :resultId")
+    List<QuizAttemptQuestion> getQuestionsForAttempt(int resultId);
 
     // Study Activity
     @Insert
@@ -64,8 +84,8 @@ public interface DeckDao {
     @Query("SELECT SUM(actionCount) FROM study_activity")
     int getTotalActionCount();
 
-    @Query("SELECT * FROM study_activity WHERE dateMillis = :todayStart LIMIT 1")
-    StudyActivity getActivityForDate(long todayStart);
+    @Query("SELECT * FROM study_activity WHERE dateMillis >= :dayStart AND dateMillis < :dayEnd LIMIT 1")
+    StudyActivity getActivityForDateRange(long dayStart, long dayEnd);
 
     @Update
     void updateStudyActivity(StudyActivity activity);
@@ -76,6 +96,9 @@ public interface DeckDao {
 
     @Insert
     void insertQuizQuestions(List<QuizQuestion> questions);
+
+    @Query("DELETE FROM quiz_questions WHERE deckId = :deckId")
+    void deleteQuizQuestionsByDeck(int deckId);
 
     @Query("SELECT * FROM quiz_questions WHERE deckId = :deckId")
     List<QuizQuestion> getQuizQuestionsByDeck(int deckId);

@@ -75,7 +75,7 @@ public class AnthropicApiService {
                         String text = json.getJSONArray("content")
                             .getJSONObject(0).getString("text");
                         
-                        // Clean the text in case Claude adds markdown backticks
+                        // Clean the text in case Claude adds mark down backticks
                         if (text.contains("```json")) {
                             text = text.substring(text.indexOf("```json") + 7);
                             text = text.substring(0, text.lastIndexOf("```"));
