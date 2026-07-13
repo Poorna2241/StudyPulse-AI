@@ -39,7 +39,7 @@ public class GeminiApiService {
         // Make sure Gemini Developer API is enabled for your Firebase project:
         // Firebase Console -> AI -> AI Logic -> Get started.
         GenerativeModel gm = FirebaseAI.getInstance(GenerativeBackend.googleAI())
-                .generativeModel("gemini-2.5-flash");
+                .generativeModel("gemini-3.1-flash-lite");
         this.model = GenerativeModelFutures.from(gm);
     }
 
@@ -81,7 +81,7 @@ public class GeminiApiService {
                         return;
                     }
 
-                    // Clean the text in case Gemini adds markdown backticks
+                    // Clean the text in case Gemini adds mar kdown backticks
                     if (text.contains("```json")) {
                         text = text.substring(text.indexOf("```json") + 7);
                         text = text.substring(0, text.lastIndexOf("```"));
