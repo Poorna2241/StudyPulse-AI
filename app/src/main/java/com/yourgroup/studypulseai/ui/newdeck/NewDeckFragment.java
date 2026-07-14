@@ -132,10 +132,27 @@ public class NewDeckFragment extends Fragment {
         });
 
         setupControls();
+        setupNotesScrolling();
         btnGenerate.setOnClickListener(v -> generateDeck());
         startRotatingBorderAnimation();
 
         return view;
+    }
+
+    @android.annotation.SuppressLint("ClickableViewAccessibility")
+    private void setupNotesScrolling() {
+        // This ensures the EditText handles its own scrolling without being hijacked by the parent ScrollView
+        etNotes.setOnTouchListener((v, event) -> {
+            if (etNotes.hasFocus()) {
+                v.getParent().requestDisallowInterceptTouchEvent(true);
+                switch (event.getAction() & android.view.MotionEvent.ACTION_MASK) {
+                    case android.view.MotionEvent.ACTION_UP:
+                        v.getParent().requestDisallowInterceptTouchEvent(false);
+                        break;
+                }
+            }
+            return false;
+        });
     }
 
     private void setupControls() {

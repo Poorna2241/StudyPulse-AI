@@ -1,337 +1,359 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background"
-    android:fillViewport="true">
+    android:background="@color/background">
 
-    <LinearLayout
+    <!-- Scrollable Content Area -->
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <!-- Header -->
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="match_parent"
-            android:layout_height="140dp"
-            app:cardElevation="0dp"
-            app:cardPreventCornerOverlap="false"
-            app:cardUseCompatPadding="false"
-            app:shapeAppearanceOverlay="@style/ShapeAppearance.StudyPulseAI.HeaderImage">
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/bg_header_gradient">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
-                    android:orientation="vertical"
-                    android:padding="24dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/new_deck_header_title"
-                        android:textColor="@color/white"
-                        android:textSize="28sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:text="@string/new_deck_header_subtitle"
-                        android:textColor="#CCFFFFFF"
-                        android:textSize="14sp" />
-                </LinearLayout>
-            </FrameLayout>
-        </com.google.android.material.card.MaterialCardView>
+        android:layout_height="match_parent"
+        android:layout_above="@+id/stickyBottomContainer"
+        android:fillViewport="true">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:orientation="vertical">
 
-            <!-- Deck Title -->
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            <!-- Header -->
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:hint="Deck Title (e.g. Software Engineering)">
+                android:layout_height="140dp"
+                app:cardElevation="0dp"
+                app:cardPreventCornerOverlap="false"
+                app:cardUseCompatPadding="false"
+                app:shapeAppearanceOverlay="@style/ShapeAppearance.StudyPulseAI.HeaderImage">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etDeckTitle"
+                <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:layout_height="match_parent"
+                    android:background="@drawable/bg_header_gradient">
 
-            <!-- Input Method Tabs -->
-            <com.google.android.material.tabs.TabLayout
-                android:id="@+id/tabInputMethod"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:tabGravity="fill"
-                app:tabIndicatorColor="@color/primary"
-                app:tabMode="fixed"
-                app:tabSelectedTextColor="@color/primary">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:orientation="vertical"
+                        android:padding="24dp">
 
-                <com.google.android.material.tabs.TabItem
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Type Notes" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/new_deck_header_title"
+                            android:textColor="@color/white"
+                            android:textSize="28sp"
+                            android:textStyle="bold" />
 
-                <com.google.android.material.tabs.TabItem
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Upload File" />
-            </com.google.android.material.tabs.TabLayout>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="@string/new_deck_header_subtitle"
+                            android:textColor="#CCFFFFFF"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+                </FrameLayout>
+            </com.google.android.material.card.MaterialCardView>
 
-            <!-- Text Input Panel -->
             <LinearLayout
-                android:id="@+id/panelText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:visibility="visible">
+                android:padding="16dp">
 
+                <!-- Deck Title -->
                 <com.google.android.material.textfield.TextInputLayout
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Paste your study notes here...">
+                    android:layout_marginBottom="16dp"
+                    android:hint="Deck Title (e.g. Software Engineering)">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etNotes"
+                        android:id="@+id/etDeckTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Input Method Tabs -->
+                <com.google.android.material.tabs.TabLayout
+                    android:id="@+id/tabInputMethod"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    app:tabGravity="fill"
+                    app:tabIndicatorColor="@color/primary"
+                    app:tabMode="fixed"
+                    app:tabSelectedTextColor="@color/primary">
+
+                    <com.google.android.material.tabs.TabItem
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Type Notes" />
+
+                    <com.google.android.material.tabs.TabItem
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Upload File" />
+                </com.google.android.material.tabs.TabLayout>
+
+                <!-- Text Input Panel -->
+                <LinearLayout
+                    android:id="@+id/panelText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="visible">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="top"
-                        android:inputType="textMultiLine"
-                        android:minLines="8"
-                        android:focusable="true"
-                        android:focusableInTouchMode="true"
-                        android:clickable="true"
-                        android:enabled="true" />
-                </com.google.android.material.textfield.TextInputLayout>
-            </LinearLayout>
+                        android:hint="Paste your study notes here...">
 
-            <!-- File Upload Panel -->
-            <LinearLayout
-                android:id="@+id/panelFile"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:visibility="gone">
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etNotes"
+                            android:layout_width="match_parent"
+                            android:layout_height="250dp"
+                            android:gravity="top"
+                            android:inputType="textMultiLine"
+                            android:minLines="8"
+                            android:focusable="true"
+                            android:focusableInTouchMode="true"
+                            android:clickable="true"
+                            android:enabled="true"
+                            android:scrollbars="vertical" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
 
-                <!-- Drop Zone Card -->
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/dropZone"
+                <!-- File Upload Panel -->
+                <LinearLayout
+                    android:id="@+id/panelFile"
                     android:layout_width="match_parent"
-                    android:layout_height="180dp"
-                    app:cardBackgroundColor="@color/primary_light"
-                    app:cardCornerRadius="16dp"
-                    app:strokeColor="@color/primary"
-                    app:strokeWidth="2dp">
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <!-- Drop Zone Card -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/dropZone"
+                        android:layout_width="match_parent"
+                        android:layout_height="180dp"
+                        app:cardBackgroundColor="@color/primary_light"
+                        app:cardCornerRadius="16dp"
+                        app:strokeColor="@color/primary"
+                        app:strokeWidth="2dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="📄"
+                                android:textSize="40sp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Tap to select a file"
+                                android:textColor="@color/primary"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="PDF, TXT, DOCX supported"
+                                android:textColor="@color/text_secondary"
+                                android:textSize="13sp" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <!-- Selected File Name -->
+                    <TextView
+                        android:id="@+id/tvFileName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text=""
+                        android:textColor="@color/primary"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+                <!-- Generation Type Selection -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:text="Choose What to Generate"
+                    android:textColor="@color/text_primary"
+                    android:textStyle="bold" />
+
+                <!-- Flashcard Section -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    app:cardBackgroundColor="@color/surface"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="2dp"
+                    app:strokeWidth="0dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:orientation="vertical">
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="12dp">
 
-                        <TextView
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="📄"
-                            android:textSize="40sp" />
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Tap to select a file"
-                            android:textColor="@color/primary"
-                            android:textSize="16sp"
-                            android:textStyle="bold" />
+                            <CheckBox
+                                android:id="@+id/cbGenerateFlashcards"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:checked="true"
+                                android:text="@string/mode_flashcards"
+                                android:textColor="@color/text_primary"
+                                android:textStyle="bold" />
 
-                        <TextView
-                            android:layout_width="wrap_content"
+                            <View android:layout_width="0dp" android:layout_height="0dp" android:layout_weight="1"/>
+
+                            <TextView
+                                android:id="@+id/tvFlashcardCountValue"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="10"
+                                android:textColor="@color/primary"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <com.google.android.material.slider.Slider
+                            android:id="@+id/sliderFlashcardCount"
+                            style="@style/Widget.StudyPulseAI.Slider"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="PDF, TXT, DOCX supported"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="13sp" />
+                            android:stepSize="5"
+                            android:value="10"
+                            android:valueFrom="5"
+                            android:valueTo="30" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
-                <!-- Selected File Name -->
-                <TextView
-                    android:id="@+id/tvFileName"
-                    android:layout_width="wrap_content"
+                <!-- Quiz Section -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text=""
-                    android:textColor="@color/primary"
-                    android:textSize="14sp" />
+                    android:layout_marginTop="12dp"
+                    android:layout_marginBottom="24dp"
+                    app:cardBackgroundColor="@color/surface"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="2dp"
+                    app:strokeWidth="0dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="12dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical">
+
+                            <CheckBox
+                                android:id="@+id/cbGenerateQuiz"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:checked="true"
+                                android:text="@string/mode_quiz"
+                                android:textColor="@color/text_primary"
+                                android:textStyle="bold" />
+
+                            <View android:layout_width="0dp" android:layout_height="0dp" android:layout_weight="1"/>
+
+                            <TextView
+                                android:id="@+id/tvQuizCountValue"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="10"
+                                android:textColor="@color/primary"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <com.google.android.material.slider.Slider
+                            android:id="@+id/sliderQuizCount"
+                            style="@style/Widget.StudyPulseAI.Slider"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:stepSize="5"
+                            android:value="10"
+                            android:valueFrom="5"
+                            android:valueTo="30" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
             </LinearLayout>
-
-            <!-- Generation Type Selection -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:text="Choose What to Generate"
-                android:textColor="@color/text_primary"
-                android:textStyle="bold" />
-
-            <!-- Flashcard Section -->
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                app:cardBackgroundColor="@color/surface"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="2dp"
-                app:strokeWidth="0dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="12dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical">
-
-                        <CheckBox
-                            android:id="@+id/cbGenerateFlashcards"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:checked="true"
-                            android:text="@string/mode_flashcards"
-                            android:textColor="@color/text_primary"
-                            android:textStyle="bold" />
-
-                        <View android:layout_width="0dp" android:layout_height="0dp" android:layout_weight="1"/>
-
-                        <TextView
-                            android:id="@+id/tvFlashcardCountValue"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="10"
-                            android:textColor="@color/primary"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-
-                    <com.google.android.material.slider.Slider
-                        android:id="@+id/sliderFlashcardCount"
-                        style="@style/Widget.StudyPulseAI.Slider"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:stepSize="5"
-                        android:value="10"
-                        android:valueFrom="5"
-                        android:valueTo="30" />
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- Quiz Section -->
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                app:cardBackgroundColor="@color/surface"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="2dp"
-                app:strokeWidth="0dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="12dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical">
-
-                        <CheckBox
-                            android:id="@+id/cbGenerateQuiz"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:checked="true"
-                            android:text="@string/mode_quiz"
-                            android:textColor="@color/text_primary"
-                            android:textStyle="bold" />
-
-                        <View android:layout_width="0dp" android:layout_height="0dp" android:layout_weight="1"/>
-
-                        <TextView
-                            android:id="@+id/tvQuizCountValue"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="10"
-                            android:textColor="@color/primary"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-
-                    <com.google.android.material.slider.Slider
-                        android:id="@+id/sliderQuizCount"
-                        style="@style/Widget.StudyPulseAI.Slider"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:stepSize="5"
-                        android:value="10"
-                        android:valueFrom="5"
-                        android:valueTo="30" />
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- Generate Button -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnGenerate"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:layout_marginTop="24dp"
-                android:background="@drawable/bg_generate_button"
-                android:text="Generate Flashcards"
-                android:textColor="@android:color/white"
-                android:textSize="16sp"
-                app:backgroundTint="@null"
-                app:cornerRadius="10dp" />
-
-            <!-- Progress Indicator -->
-            <com.google.android.material.progressindicator.LinearProgressIndicator
-                android:id="@+id/progressGenerate"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:visibility="gone"
-                app:indicatorColor="@color/primary"
-                app:trackColor="@color/primary_light" />
-
-            <TextView
-                android:id="@+id/tvProgressMessage"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:gravity="center"
-                android:text="Your flashcards and quiz are being generated, please wait..."
-                android:textColor="@color/text_secondary"
-                android:textSize="14sp"
-                android:visibility="gone" />
-
         </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- Sticky Bottom Container -->
+    <LinearLayout
+        android:id="@+id/stickyBottomContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:background="@color/background"
+        android:elevation="8dp">
+
+        <!-- Generate Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnGenerate"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:background="@drawable/bg_generate_button"
+            android:text="Generate Flashcards &amp; Quiz"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            app:backgroundTint="@null"
+            app:cornerRadius="10dp" />
+
+        <!-- Progress Indicator -->
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:id="@+id/progressGenerate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:visibility="gone"
+            app:indicatorColor="@color/primary"
+            app:trackColor="@color/primary_light" />
+
+        <TextView
+            android:id="@+id/tvProgressMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:text="Your materials are being created..."
+            android:textColor="@color/text_secondary"
+            android:textSize="13sp"
+            android:visibility="gone" />
+
     </LinearLayout>
-</ScrollView>
+
+</RelativeLayout>
