@@ -44,13 +44,23 @@ public class GeminiApiService {
     }
 
     public void generateDeck(String notes, int count, ApiCallback callback) {
-        String prompt = "You are a study assistant. Given the notes below, " +
-                "generate exactly " + count + " flashcards and " + count +
-                " quiz questions. Respond ONLY with valid JSON in this exact format:\n" +
-                "{\"flashcards\": [{\"question\": \"...\", \"answer\": \"...\"}],\n" +
-                " \"quiz\": [{\"question\": \"...\",\n" +
-                "   \"options\": [\"A\",\"B\",\"C\",\"D\"]," +
-                "   \"correct_index\": 0}]}\n\nNOTES:\n" + notes;
+        String prompt = "You are an expert study assistant. Given the study notes below, generate exactly " + count + " flashcards and exactly " + count + " quiz questions.\n\n" +
+                "GUIDELINES FOR QUIZ QUESTIONS:\n" +
+                "1. If the notes are brief, do not repeat the same facts. Instead, create a mix of:\n" +
+                "   - Direct knowledge questions (recall facts from notes).\n" +
+                "   - Application-based questions (apply concepts to real-world scenarios).\n" +
+                "   - Scenario-based questions (solve a problem using the concepts).\n" +
+                "   - Comparison/Relationship questions (how concepts relate to each other).\n" +
+                "   - Reasoning questions (why a concept is important or true).\n" +
+                "2. Stay strictly faithful to the concepts in the notes. Do not introduce new topics or external academic knowledge beyond realistic examples for the existing concepts.\n" +
+                "3. Ensure each question is unique and high-quality.\n\n" +
+                "OUTPUT FORMAT:\n" +
+                "Respond ONLY with a single valid JSON object in this exact format:\n" +
+                "{\n" +
+                "  \"flashcards\": [{\"question\": \"...\", \"answer\": \"...\"}],\n" +
+                "  \"quiz\": [{\"question\": \"...\", \"options\": [\"A\",\"B\",\"C\",\"D\"], \"correct_index\": 0}]\n" +
+                "}\n\n" +
+                "NOTES:\n" + notes;
 
         Content content = new Content.Builder()
                 .addText(prompt)
