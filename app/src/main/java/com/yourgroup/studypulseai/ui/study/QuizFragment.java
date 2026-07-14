@@ -19,6 +19,7 @@ import androidx.navigation.Navigation;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
+import com.google.android.material.slider.Slider;
 import com.yourgroup.studypulseai.R;
 import com.yourgroup.studypulseai.data.db.AppDatabase;
 import com.yourgroup.studypulseai.data.model.Deck;
@@ -96,12 +97,6 @@ public class QuizFragment extends Fragment {
             return;
         }
 
-        AlertDialog loadingDialog = new AlertDialog.Builder(requireContext())
-                .setMessage("Preparing your quiz...")
-                .setCancelable(false)
-                .create();
-        loadingDialog.show();
-
         new Thread(() -> {
             AppDatabase db = AppDatabase.getInstance(requireContext());
             
@@ -110,37 +105,69 @@ public class QuizFragment extends Fragment {
             boolean hasTakenQuizBefore = existingResults != null && !existingResults.isEmpty();
 
             if (!hasTakenQuizBefore) {
-                // FIRST TIME: Just load the questions that were generated when the deck was created
-                List<QuizQuestion> loaded = db.deckDao().getQuizQuestionsByDeck(deckId);
-                if (getActivity() != null) {
-                    getActivity().runOnUiThread(() -> {
-                        loadingDialog.dismiss();
-                        quizQuestions = loaded;
-                        if (quizQuestions.isEmpty()) {
-                            // If for some reason they are missing, try to regenerate anyway
-                            regenerateQuiz(db, null);
-                        } else {
-                            currentIndex = 0;
-                            score = 0;
-                            userAnswers.clear();
-                            isAnswerSubmitted = false;
-                            showQuestion();
-                        }
-                    });
-                }
+                // FIRST TIME: Automatically show "Preparing..." and load the stored quiz
+                requireActivity().runOnUiThread(() -> {
+                    AlertDialog loadingDialog = new AlertDialog.Builder(requireContext())
+                            .setMessage("Preparing your first quiz...")
+                            .setCancelable(false)
+                            .create();
+                    loadingDialog.show();
+
+                    new Thread(() -> {
+                        List<QuizQuestion> loaded = db.deckDao().getQuizQuestionsByDeck(deckId);
+                        requireActivity().runOnUiThread(() -> {
+                            loadingDialog.dismiss();
+                            quizQuestions = loaded;
+                            if (quizQuestions.isEmpty()) {
+                                // If missing, regenerate with default count
+                                regenerateQuiz(db, null, 10);
+                            } else {
+                                currentIndex = 0;
+                                score = 0;
+                                userAnswers.clear();
+                                isAnswerSubmitted = false;
+                                showQuestion();
+                            }
+                        });
+                    }).start();
+                });
             } else {
-                // SUBSEQUENT TIMES: Regenerate completely fresh questions
-                if (getActivity() != null) {
-                    getActivity().runOnUiThread(() -> {
-                        loadingDialog.setMessage("Regenerating fresh questions for your quiz...");
-                        regenerateQuiz(db, loadingDialog);
-                    });
-                }
+                // SUBSEQUENT TIMES: Show customization dialog first
+                requireActivity().runOnUiThread(this::showCustomizationDialog);
             }
         }).start();
     }
 
-    private void regenerateQuiz(AppDatabase db, AlertDialog loadingDialog) {
+    private void showCustomizationDialog() {
+        View dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_customize_quiz, null);
+        AlertDialog dialog = new AlertDialog.Builder(requireContext())
+                .setView(dialogView)
+                .setCancelable(true)
+                .create();
+
+        Slider slider = dialogView.findViewById(R.id.sliderCustomCount);
+        TextView tvValue = dialogView.findViewById(R.id.tvCustomCountValue);
+        MaterialButton btnStart = dialogView.findViewById(R.id.btnStartCustomQuiz);
+
+        slider.addOnChangeListener((s, value, fromUser) -> tvValue.setText(String.valueOf((int) value)));
+
+        btnStart.setOnClickListener(v -> {
+            int requestedCount = (int) slider.getValue();
+            dialog.dismiss();
+            
+            AlertDialog loadingDialog = new AlertDialog.Builder(requireContext())
+                    .setMessage("Regenerating " + requestedCount + " fresh questions for your quiz...")
+                    .setCancelable(false)
+                    .create();
+            loadingDialog.show();
+            
+            new Thread(() -> regenerateQuiz(AppDatabase.getInstance(requireContext()), loadingDialog, requestedCount)).start();
+        });
+
+        dialog.show();
+    }
+
+    private void regenerateQuiz(AppDatabase db, AlertDialog loadingDialog, int requestedCount) {
         new Thread(() -> {
             Deck deck = db.deckDao().getDeckById(deckId);
             if (deck == null || deck.getNotes() == null || deck.getNotes().isEmpty()) {
@@ -148,11 +175,7 @@ public class QuizFragment extends Fragment {
                 return;
             }
 
-            // Perform AI regeneration
-            // Use the original question count requested for this deck
-            int count = (deck.getQuestionCount() > 0) ? deck.getQuestionCount() : 10;
-
-            new GeminiApiService().generateDeck(deck.getNotes(), count, new GeminiApiService.ApiCallback() {
+            new GeminiApiService().generateDeck(deck.getNotes(), requestedCount, new GeminiApiService.ApiCallback() {
                 @Override
                 public void onSuccess(List<com.yourgroup.studypulseai.data.model.Flashcard> flashcards, List<QuizQuestion> questions) {
                     new Thread(() -> {
