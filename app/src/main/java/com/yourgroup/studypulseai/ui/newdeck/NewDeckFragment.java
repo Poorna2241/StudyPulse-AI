@@ -150,6 +150,8 @@ public class NewDeckFragment extends Fragment {
 
         sliderFlashcards.addOnChangeListener((s, value, fromUser) -> tvFlashcardCount.setText(String.valueOf((int) value)));
         sliderQuiz.addOnChangeListener((s, value, fromUser) -> tvQuizCount.setText(String.valueOf((int) value)));
+
+        updateButtonText(); // Set initial button text based on default checked states
     }
 
     private void updateButtonText() {

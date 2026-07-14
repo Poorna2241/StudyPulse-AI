@@ -35,8 +35,12 @@ public class GeminiApiService {
     }
 
     public GeminiApiService() {
+        // Firebase AI Logic routes auth through your Firebase project config
+        // (google-services.json), not a raw API key bundled in the app.
+        // Make sure Gemini Developer API is enabled for your Firebase project:
+        // Firebase Console -> AI -> AI Logic -> Get started.
         GenerativeModel gm = FirebaseAI.getInstance(GenerativeBackend.googleAI())
-                .generativeModel("gemini-2.0-flash");
+                .generativeModel("gemini-3.1-flash-lite");
         this.model = GenerativeModelFutures.from(gm);
     }
 
