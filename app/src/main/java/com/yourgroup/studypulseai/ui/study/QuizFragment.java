@@ -175,7 +175,9 @@ public class QuizFragment extends Fragment {
                 return;
             }
 
-            new GeminiApiService().generateDeck(deck.getNotes(), requestedCount, new GeminiApiService.ApiCallback() {
+            // Perform AI regeneration
+            // For quiz-only regeneration, we set flashcard count to 0
+            new GeminiApiService().generateDeck(deck.getNotes(), 0, requestedCount, new GeminiApiService.ApiCallback() {
                 @Override
                 public void onSuccess(List<com.yourgroup.studypulseai.data.model.Flashcard> flashcards, List<QuizQuestion> questions) {
                     new Thread(() -> {

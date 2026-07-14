@@ -16,6 +16,7 @@ import com.yourgroup.studypulseai.data.model.QuizQuestion;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -34,26 +35,19 @@ public class GeminiApiService {
     }
 
     public GeminiApiService() {
-        // Firebase AI Logic routes auth through your Firebase project config
-        // (google-services.json), not a raw API key bundled in the app.
-        // Make sure Gemini Developer API is enabled for your Firebase project:
-        // Firebase Console -> AI -> AI Logic -> Get started.
         GenerativeModel gm = FirebaseAI.getInstance(GenerativeBackend.googleAI())
-                .generativeModel("gemini-3.1-flash-lite");
+                .generativeModel("gemini-2.0-flash");
         this.model = GenerativeModelFutures.from(gm);
     }
 
-    public void generateDeck(String notes, int count, ApiCallback callback) {
-        String prompt = "You are an expert study assistant. Given the study notes below, generate exactly " + count + " flashcards and exactly " + count + " quiz questions.\n\n" +
-                "GUIDELINES FOR QUIZ QUESTIONS:\n" +
-                "1. If the notes are brief, do not repeat the same facts. Instead, create a mix of:\n" +
-                "   - Direct knowledge questions (recall facts from notes).\n" +
-                "   - Application-based questions (apply concepts to real-world scenarios).\n" +
-                "   - Scenario-based questions (solve a problem using the concepts).\n" +
-                "   - Comparison/Relationship questions (how concepts relate to each other).\n" +
-                "   - Reasoning questions (why a concept is important or true).\n" +
-                "2. Stay strictly faithful to the concepts in the notes. Do not introduce new topics or external academic knowledge beyond realistic examples for the existing concepts.\n" +
-                "3. Ensure each question is unique and high-quality.\n\n" +
+    public void generateDeck(String notes, int flashcardCount, int quizCount, ApiCallback callback) {
+        String prompt = "You are an expert study assistant. Based ONLY on the study notes provided below, " +
+                "generate EXACTLY " + flashcardCount + " flashcards and EXACTLY " + quizCount +
+                " quiz questions. \n\n" +
+                "GUIDELINES:\n" +
+                "1. If notes are brief, create application-based, scenario, or reasoning questions to reach the target count.\n" +
+                "2. Stay strictly faithful to the notes. Do not introduce new topics.\n" +
+                "3. If a count is 0, return an empty array for that field.\n\n" +
                 "OUTPUT FORMAT:\n" +
                 "Respond ONLY with a single valid JSON object in this exact format:\n" +
                 "{\n" +
@@ -68,21 +62,18 @@ public class GeminiApiService {
 
         ListenableFuture<GenerateContentResponse> response = model.generateContent(content);
 
-        // Watchdog: if generateContent() never calls back (hung network call,
-        // no response from Google's servers, etc.) this guarantees the user
-        // sees an error after 45s instead of a spinner that never resolves.
         AtomicBoolean alreadyResolved = new AtomicBoolean(false);
         timeoutExecutor.schedule(() -> {
             if (alreadyResolved.compareAndSet(false, true)) {
                 response.cancel(true);
                 callback.onError("Request timed out. Check your internet connection and try again.");
             }
-        }, 45, TimeUnit.SECONDS);
+        }, 60, TimeUnit.SECONDS); // Increased to 60s for potentially larger requests
 
         Futures.addCallback(response, new FutureCallback<GenerateContentResponse>() {
             @Override
             public void onSuccess(GenerateContentResponse result) {
-                if (!alreadyResolved.compareAndSet(false, true)) return; // timeout already fired
+                if (!alreadyResolved.compareAndSet(false, true)) return;
 
                 try {
                     String text = result.getText();
@@ -91,7 +82,6 @@ public class GeminiApiService {
                         return;
                     }
 
-                    // Clean the text in case Gemini adds mar kdown backticks
                     if (text.contains("```json")) {
                         text = text.substring(text.indexOf("```json") + 7);
                         text = text.substring(0, text.lastIndexOf("```"));
@@ -102,13 +92,19 @@ public class GeminiApiService {
 
                     JSONObject data = new JSONObject(text.trim());
 
-                    List<Flashcard> flashcards = new Gson().fromJson(
-                            data.getJSONArray("flashcards").toString(),
-                            new TypeToken<List<Flashcard>>(){}.getType());
+                    List<Flashcard> flashcards = new ArrayList<>();
+                    if (data.has("flashcards")) {
+                        flashcards = new Gson().fromJson(
+                                data.getJSONArray("flashcards").toString(),
+                                new TypeToken<List<Flashcard>>(){}.getType());
+                    }
 
-                    List<QuizQuestion> questions = new Gson().fromJson(
-                            data.getJSONArray("quiz").toString(),
-                            new TypeToken<List<QuizQuestion>>(){}.getType());
+                    List<QuizQuestion> questions = new ArrayList<>();
+                    if (data.has("quiz")) {
+                        questions = new Gson().fromJson(
+                                data.getJSONArray("quiz").toString(),
+                                new TypeToken<List<QuizQuestion>>(){}.getType());
+                    }
 
                     callback.onSuccess(flashcards, questions);
                 } catch (Exception e) {
@@ -118,7 +114,7 @@ public class GeminiApiService {
 
             @Override
             public void onFailure(@androidx.annotation.NonNull Throwable t) {
-                if (!alreadyResolved.compareAndSet(false, true)) return; // timeout already fired
+                if (!alreadyResolved.compareAndSet(false, true)) return;
                 callback.onError("Gemini API error: " + t.getMessage());
             }
         }, executor);

@@ -14,8 +14,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.LinearInterpolator;
+import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -26,7 +28,6 @@ import androidx.navigation.Navigation;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
-import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.android.material.slider.Slider;
 import com.google.android.material.tabs.TabLayout;
@@ -45,16 +46,16 @@ import com.yourgroup.studypulseai.util.FileExtractor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import android.widget.Toast;
 
 public class NewDeckFragment extends Fragment {
     private TextInputEditText etDeckTitle, etNotes;
     private TabLayout tabInputMethod;
     private LinearLayout panelText, panelFile;
     private MaterialCardView dropZone;
-    private TextView tvFileName, tvSliderValue, tvSliderLabel, tvProgressMessage;
-    private Slider sliderCount;
-    private ChipGroup chipGroupMode;
+    private TextView tvFileName, tvProgressMessage;
+    private CheckBox cbFlashcards, cbQuiz;
+    private TextView tvFlashcardCount, tvQuizCount;
+    private Slider sliderFlashcards, sliderQuiz;
     private MaterialButton btnGenerate;
     private LinearProgressIndicator progressGenerate;
     private androidx.appcompat.app.AlertDialog progressDialog;
@@ -91,10 +92,14 @@ public class NewDeckFragment extends Fragment {
         panelFile = view.findViewById(R.id.panelFile);
         dropZone = view.findViewById(R.id.dropZone);
         tvFileName = view.findViewById(R.id.tvFileName);
-        sliderCount = view.findViewById(R.id.sliderCount);
-        tvSliderValue = view.findViewById(R.id.tvSliderValue);
-        tvSliderLabel = view.findViewById(R.id.tvSliderLabel);
-        chipGroupMode = view.findViewById(R.id.chipGroupMode);
+        
+        cbFlashcards = view.findViewById(R.id.cbGenerateFlashcards);
+        cbQuiz = view.findViewById(R.id.cbGenerateQuiz);
+        tvFlashcardCount = view.findViewById(R.id.tvFlashcardCountValue);
+        tvQuizCount = view.findViewById(R.id.tvQuizCountValue);
+        sliderFlashcards = view.findViewById(R.id.sliderFlashcardCount);
+        sliderQuiz = view.findViewById(R.id.sliderQuizCount);
+        
         btnGenerate = view.findViewById(R.id.btnGenerate);
         progressGenerate = view.findViewById(R.id.progressGenerate);
         tvProgressMessage = view.findViewById(R.id.tvProgressMessage);
@@ -126,30 +131,34 @@ public class NewDeckFragment extends Fragment {
             filePickerLauncher.launch(intent);
         });
 
-        sliderCount.addOnChangeListener((slider, value, fromUser) -> {
-            tvSliderValue.setText(String.valueOf((int) value));
-        });
-
-        chipGroupMode.setOnCheckedStateChangeListener((group, checkedIds) -> {
-            if (!checkedIds.isEmpty()) {
-                int id = checkedIds.get(0);
-                if (id == R.id.chipFlashcards) {
-                    tvSliderLabel.setText(R.string.label_number_of_flashcards);
-                    btnGenerate.setText(R.string.btn_generate_flashcards);
-                    tvSliderValue.setText(String.valueOf((int) sliderCount.getValue()));
-                } else {
-                    tvSliderLabel.setText(R.string.label_number_of_questions);
-                    btnGenerate.setText(R.string.btn_generate_quiz);
-                    tvSliderValue.setText(String.valueOf((int) sliderCount.getValue()));
-                }
-            }
-        });
-
+        setupControls();
         btnGenerate.setOnClickListener(v -> generateDeck());
-
         startRotatingBorderAnimation();
 
         return view;
+    }
+
+    private void setupControls() {
+        cbFlashcards.setOnCheckedChangeListener((b, isChecked) -> {
+            sliderFlashcards.setEnabled(isChecked);
+            updateButtonText();
+        });
+        cbQuiz.setOnCheckedChangeListener((b, isChecked) -> {
+            sliderQuiz.setEnabled(isChecked);
+            updateButtonText();
+        });
+
+        sliderFlashcards.addOnChangeListener((s, value, fromUser) -> tvFlashcardCount.setText(String.valueOf((int) value)));
+        sliderQuiz.addOnChangeListener((s, value, fromUser) -> tvQuizCount.setText(String.valueOf((int) value)));
+    }
+
+    private void updateButtonText() {
+        boolean f = cbFlashcards.isChecked();
+        boolean q = cbQuiz.isChecked();
+        if (f && q) btnGenerate.setText("Generate Flashcards & Quiz");
+        else if (f) btnGenerate.setText("Generate Flashcards Only");
+        else if (q) btnGenerate.setText("Generate Quiz Only");
+        else btnGenerate.setText("Select generation type");
     }
 
     private void startRotatingBorderAnimation() {
@@ -174,15 +183,13 @@ public class NewDeckFragment extends Fragment {
         new Thread(() -> {
             String text = FileExtractor.extract(requireContext(), uri);
             requireActivity().runOnUiThread(() -> {
-                if (getView() == null) return; // fragment view may be gone by the time extraction finishes
-
+                if (getView() == null) return;
                 Bundle args = new Bundle();
                 args.putString("extractedText", text);
                 try {
                     Navigation.findNavController(requireView())
                             .navigate(R.id.action_newDeckFragment_to_filePreviewFragment, args);
                 } catch (IllegalArgumentException | IllegalStateException e) {
-                    // Nav controller not in the expected state (e.g. user backed out already) - fail safely
                     Toast.makeText(getContext(), "Couldn't open file preview. Please try again.", Toast.LENGTH_SHORT).show();
                 }
             });
@@ -210,7 +217,17 @@ public class NewDeckFragment extends Fragment {
     private void generateDeck() {
         String title = etDeckTitle.getText().toString().trim();
         String notes = etNotes.getText().toString().trim();
-        int count = (int) sliderCount.getValue();
+        
+        boolean genFlash = cbFlashcards.isChecked();
+        boolean genQuiz = cbQuiz.isChecked();
+        
+        if (!genFlash && !genQuiz) {
+            Toast.makeText(getContext(), "Please select at least one type to generate", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        int fCount = genFlash ? (int) sliderFlashcards.getValue() : 0;
+        int qCount = genQuiz ? (int) sliderQuiz.getValue() : 0;
 
         if (title.isEmpty()) title = "Untitled Deck";
         if (notes.isEmpty()) {
@@ -224,13 +241,13 @@ public class NewDeckFragment extends Fragment {
         tvProgressMessage.setVisibility(View.VISIBLE);
 
         progressDialog = new androidx.appcompat.app.AlertDialog.Builder(requireContext())
-                .setMessage("Please wait, quiz or flashcards are being created...")
+                .setMessage("Please wait, your materials are being created...")
                 .setCancelable(false)
                 .create();
         progressDialog.show();
 
         String finalTitle = title;
-        new GeminiApiService().generateDeck(notes, count, new GeminiApiService.ApiCallback() {
+        new GeminiApiService().generateDeck(notes, fCount, qCount, new GeminiApiService.ApiCallback() {
             @Override
             public void onSuccess(List<Flashcard> flashcards, List<QuizQuestion> questions) {
                 if (getActivity() == null) return;
@@ -238,12 +255,9 @@ public class NewDeckFragment extends Fragment {
                 String[] backgrounds = {"c1", "c2", "c3", "c4", "c5"};
                 String randomBg = backgrounds[new Random().nextInt(backgrounds.length)];
 
-                // Save to Supabase
                 SupabaseRepo.saveDeck(finalTitle, randomBg, deckId -> {
                     if (getActivity() == null) return;
-
                     if (deckId != null) {
-                        // Save Flashcards to Supabase
                         List<SFlashcard> sFlashcards = new ArrayList<>();
                         String userId = SupabaseAuthHelper.getCurrentUserId();
                         if (userId == null) userId = "guest";
@@ -254,13 +268,10 @@ public class NewDeckFragment extends Fragment {
 
                         SupabaseRepo.saveFlashcards(sFlashcards, success -> {
                             if (getActivity() == null) return;
-
-                            // Also save to Room locally
                             new Thread(() -> {
                                 if (getContext() == null) return;
-
                                 try {
-                                    Deck localDeck = new Deck(finalTitle, randomBg, notes, count);
+                                    Deck localDeck = new Deck(finalTitle, randomBg, notes, qCount);
                                     long localId = AppDatabase.getInstance(requireContext()).deckDao().insertDeck(localDeck);
                                     for (Flashcard f : flashcards) {
                                         f.setDeckId((int) localId);
@@ -272,8 +283,7 @@ public class NewDeckFragment extends Fragment {
                                     AppDatabase.getInstance(requireContext()).deckDao().insertQuizQuestions(questions);
 
                                      requireActivity().runOnUiThread(() -> {
-                                         if (getView() == null) return; // fragment view destroyed before we got back to the UI thread
-
+                                         if (getView() == null) return;
                                          if (progressDialog != null && progressDialog.isShowing()) {
                                              progressDialog.dismiss();
                                          }
@@ -281,23 +291,17 @@ public class NewDeckFragment extends Fragment {
                                          tvProgressMessage.setVisibility(View.GONE);
                                          btnGenerate.setEnabled(true);
                                         Toast.makeText(getContext(), "Deck generated and synced!", Toast.LENGTH_LONG).show();
-
                                         try {
                                             Navigation.findNavController(requireView())
                                                     .navigate(R.id.action_newDeckFragment_to_homeFragment);
-                                        } catch (IllegalArgumentException | IllegalStateException e) {
-                                            // Nav controller couldn't perform this navigation right now.
-                                            // Deck is already saved (Supabase + Room), so this is just a
-                                            // navigation hiccup, not data loss - fail safely instead of crashing.
+                                        } catch (Exception e) {
                                             Toast.makeText(getContext(), "Deck saved. Please go back to Home manually.", Toast.LENGTH_LONG).show();
                                         }
                                     });
                                 } catch (Exception e) {
                                     requireActivity().runOnUiThread(() -> {
                                         if (getView() == null) return;
-                                        if (progressDialog != null && progressDialog.isShowing()) {
-                                            progressDialog.dismiss();
-                                        }
+                                        if (progressDialog != null && progressDialog.isShowing()) progressDialog.dismiss();
                                         progressGenerate.setVisibility(View.GONE);
                                         tvProgressMessage.setVisibility(View.GONE);
                                         btnGenerate.setEnabled(true);
@@ -309,9 +313,7 @@ public class NewDeckFragment extends Fragment {
                     } else {
                         requireActivity().runOnUiThread(() -> {
                             if (getView() == null) return;
-                            if (progressDialog != null && progressDialog.isShowing()) {
-                                progressDialog.dismiss();
-                            }
+                            if (progressDialog != null && progressDialog.isShowing()) progressDialog.dismiss();
                             progressGenerate.setVisibility(View.GONE);
                             tvProgressMessage.setVisibility(View.GONE);
                             btnGenerate.setEnabled(true);
@@ -326,9 +328,7 @@ public class NewDeckFragment extends Fragment {
                 if (getActivity() == null) return;
                 requireActivity().runOnUiThread(() -> {
                     if (getView() == null) return;
-                    if (progressDialog != null && progressDialog.isShowing()) {
-                        progressDialog.dismiss();
-                    }
+                    if (progressDialog != null && progressDialog.isShowing()) progressDialog.dismiss();
                     progressGenerate.setVisibility(View.GONE);
                     tvProgressMessage.setVisibility(View.GONE);
                     btnGenerate.setEnabled(true);

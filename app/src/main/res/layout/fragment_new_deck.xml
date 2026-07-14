@@ -181,79 +181,122 @@
                     android:textSize="14sp" />
             </LinearLayout>
 
-            <!-- Study Mode Selection -->
+            <!-- Generation Type Selection -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:text="@string/label_select_generation_type"
+                android:text="Choose What to Generate"
                 android:textColor="@color/text_primary"
                 android:textStyle="bold" />
 
-            <com.google.android.material.chip.ChipGroup
-                android:id="@+id/chipGroupMode"
+            <!-- Flashcard Section -->
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                app:selectionRequired="true"
-                app:singleSelection="true">
+                android:layout_marginTop="12dp"
+                app:cardBackgroundColor="@color/surface"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp"
+                app:strokeWidth="0dp">
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chipFlashcards"
-                    style="@style/Widget.MaterialComponents.Chip.Filter"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:checked="true"
-                    android:text="@string/mode_flashcards" />
+                    android:orientation="vertical"
+                    android:padding="12dp">
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chipQuiz"
-                    style="@style/Widget.MaterialComponents.Chip.Filter"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/mode_quiz" />
-            </com.google.android.material.chip.ChipGroup>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
 
-            <!-- Flashcard Count Slider Section -->
-            <RelativeLayout
+                        <CheckBox
+                            android:id="@+id/cbGenerateFlashcards"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checked="true"
+                            android:text="@string/mode_flashcards"
+                            android:textColor="@color/text_primary"
+                            android:textStyle="bold" />
+
+                        <View android:layout_width="0dp" android:layout_height="0dp" android:layout_weight="1"/>
+
+                        <TextView
+                            android:id="@+id/tvFlashcardCountValue"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="10"
+                            android:textColor="@color/primary"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <com.google.android.material.slider.Slider
+                        android:id="@+id/sliderFlashcardCount"
+                        style="@style/Widget.StudyPulseAI.Slider"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:stepSize="5"
+                        android:value="10"
+                        android:valueFrom="5"
+                        android:valueTo="30" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Quiz Section -->
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp">
+                android:layout_marginTop="12dp"
+                app:cardBackgroundColor="@color/surface"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp"
+                app:strokeWidth="0dp">
 
-                <TextView
-                    android:id="@+id/tvSliderLabel"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:text="@string/label_number_of_flashcards"
-                    android:textColor="@color/text_primary"
-                    android:textStyle="bold" />
+                    android:orientation="vertical"
+                    android:padding="12dp">
 
-                <TextView
-                    android:id="@+id/tvSliderValue"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:text="10"
-                    android:textColor="@color/text_primary"
-                    android:textStyle="bold" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
 
-            </RelativeLayout>
+                        <CheckBox
+                            android:id="@+id/cbGenerateQuiz"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checked="true"
+                            android:text="@string/mode_quiz"
+                            android:textColor="@color/text_primary"
+                            android:textStyle="bold" />
 
-            <com.google.android.material.slider.Slider
-                android:id="@+id/sliderCount"
-                style="@style/Widget.StudyPulseAI.Slider"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:stepSize="5"
-                android:value="10"
-                android:valueFrom="5"
-                android:valueTo="30"
-                app:thumbElevation="7dp"
-                app:thumbIcon="@drawable/slider_thumb_state_list"
-                app:thumbStrokeColor="#FBFBFB"
-                app:thumbStrokeWidth="3dp" />
+                        <View android:layout_width="0dp" android:layout_height="0dp" android:layout_weight="1"/>
+
+                        <TextView
+                            android:id="@+id/tvQuizCountValue"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="10"
+                            android:textColor="@color/primary"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <com.google.android.material.slider.Slider
+                        android:id="@+id/sliderQuizCount"
+                        style="@style/Widget.StudyPulseAI.Slider"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:stepSize="5"
+                        android:value="10"
+                        android:valueFrom="5"
+                        android:valueTo="30" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
             <!-- Generate Button -->
             <com.google.android.material.button.MaterialButton
