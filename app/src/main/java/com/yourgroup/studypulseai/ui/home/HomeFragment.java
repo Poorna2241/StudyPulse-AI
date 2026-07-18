@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,14 +15,17 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.yourgroup.studypulseai.R;
 import com.yourgroup.studypulseai.data.db.AppDatabase;
 import com.yourgroup.studypulseai.data.model.Deck;
 import com.yourgroup.studypulseai.network.SupabaseAuthHelper;
+import com.yourgroup.studypulseai.network.SupabaseRepo;
+import com.yourgroup.studypulseai.network.models.SChallenge;
 import androidx.navigation.Navigation;
 
-
-import androidx.navigation.Navigation;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -34,6 +38,8 @@ public class HomeFragment extends Fragment {
     private View emptyState;
     private DeckAdapter adapter;
     private SearchView searchViewDecks;
+    private MaterialButton btnJoinChallenge, btnRejoinChallenge;
+    private View btnChallengeHistory;
 
     @Nullable
     @Override
@@ -45,14 +51,115 @@ public class HomeFragment extends Fragment {
         rvDecks = view.findViewById(R.id.rvDecks);
         emptyState = view.findViewById(R.id.emptyState);
         searchViewDecks = view.findViewById(R.id.searchViewDecks);
+        btnJoinChallenge = view.findViewById(R.id.btnJoinChallenge);
+        btnRejoinChallenge = view.findViewById(R.id.btnRejoinChallenge);
+        btnChallengeHistory = view.findViewById(R.id.btnChallengeHistory);
 
         setupRecyclerView();
         updateUserGreeting();
         setupSearchView();
         
         loadDecks(); // Load from Room
+        checkActiveChallenge();
+
+        btnJoinChallenge.setOnClickListener(v -> showJoinChallengeDialog());
+        btnChallengeHistory.setOnClickListener(v -> Navigation.findNavController(requireView()).navigate(R.id.challengeHistoryFragment));
+
+        // Long press on Rejoin button to force clear it if stuck
+        btnRejoinChallenge.setOnLongClickListener(v -> {
+            new AlertDialog.Builder(requireContext())
+                .setTitle("Stuck Button?")
+                .setMessage("Would you like to clear this active room and remove the Re-join button?")
+                .setPositiveButton("Clear Button", (d, w) -> {
+                    SupabaseRepo.fetchUserChallenges(challenges -> {
+                        for (SChallenge c : challenges) {
+                            if (!"finished".equalsIgnoreCase(c.getStatus())) {
+                                Integer id = c.getId();
+                                if (id != null) SupabaseRepo.updateChallengeStatus(id, "finished");
+                            }
+                        }
+                        getActivity().runOnUiThread(() -> {
+                            btnRejoinChallenge.setVisibility(View.GONE);
+                            Toast.makeText(getContext(), "Session cleared", Toast.LENGTH_SHORT).show();
+                        });
+                    });
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+            return true;
+        });
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        checkActiveChallenge();
+    }
+
+    private void checkActiveChallenge() {
+        SupabaseRepo.fetchUserChallenges(challenges -> {
+            if (getActivity() == null) return;
+            
+            android.util.Log.d("ChallengeDebug", "Fetched " + challenges.size() + " potential challenges");
+            SChallenge active = null;
+            long now = System.currentTimeMillis();
+            
+            for (SChallenge c : challenges) {
+                android.util.Log.d("ChallengeDebug", "Checking Challenge ID: " + c.getId() + " Status: " + c.getStatus() + " Start: " + c.getStart_time());
+                // AGGRESSIVE AUTO-CLOSE: If challenge is older than 2 hours, force finish it
+                long createdAt = c.getStart_time(); 
+                if (("waiting".equalsIgnoreCase(c.getStatus()) || "started".equalsIgnoreCase(c.getStatus())) && (now - createdAt > 7200000L)) {
+                    android.util.Log.d("ChallengeDebug", "Force-closing expired challenge: " + c.getId());
+                    Integer cid = c.getId();
+                    if (cid != null) SupabaseRepo.updateChallengeStatus(cid, "finished");
+                    continue;
+                }
+
+                if ("waiting".equalsIgnoreCase(c.getStatus()) || "started".equalsIgnoreCase(c.getStatus())) {
+                    active = c;
+                    // break; // Don't break yet, we might need to close others
+                }
+            }
+
+            final SChallenge finalActive = active;
+            getActivity().runOnUiThread(() -> {
+                if (finalActive != null) {
+                    // Check if user already finished this specific challenge
+                    SupabaseRepo.getParticipantStatus(finalActive.getId(), p -> {
+                        if (getActivity() == null) return;
+                        if (p != null && "finished".equalsIgnoreCase(p.getStatus())) {
+                            // User finished early, show "View Results" instead of "Re-join"
+                            btnRejoinChallenge.setVisibility(View.VISIBLE);
+                            btnRejoinChallenge.setText("View Results");
+                            btnRejoinChallenge.setOnClickListener(v -> {
+                                Bundle args = new Bundle();
+                                args.putInt("challengeId", finalActive.getId());
+                                Navigation.findNavController(requireView()).navigate(R.id.challengeLeaderboardFragment, args);
+                            });
+                        } else {
+                            // User hasn't finished, normal re-join logic
+                            btnRejoinChallenge.setVisibility(View.VISIBLE);
+                            btnRejoinChallenge.setText("Re-join Study Room");
+                            btnRejoinChallenge.setOnClickListener(v -> {
+                                Bundle args = new Bundle();
+                                args.putInt("challengeId", finalActive.getId());
+                                args.putString("challengeCode", finalActive.getChallenge_code());
+                                
+                                if ("waiting".equalsIgnoreCase(finalActive.getStatus())) {
+                                    Navigation.findNavController(requireView()).navigate(R.id.challengeWaitingRoomFragment, args);
+                                } else {
+                                    Navigation.findNavController(requireView()).navigate(R.id.challengeQuizFragment, args);
+                                }
+                            });
+                        }
+                    });
+                } else {
+                    btnRejoinChallenge.setVisibility(View.GONE);
+                }
+            });
+        });
     }
 
     private void setupRecyclerView() {
@@ -75,12 +182,68 @@ public class HomeFragment extends Fragment {
                 args.putString("deckTitle", deck.getTitle());
                 Navigation.findNavController(requireView()).navigate(R.id.quizFragment, args);
             }
+            @Override public void onChallengeClick(Deck deck) {
+                Bundle args = new Bundle();
+                args.putInt("deckId", deck.getId());
+                args.putString("deckTitle", deck.getTitle());
+                Navigation.findNavController(requireView()).navigate(R.id.createChallengeFragment, args);
+            }
             @Override public void onDeleteClick(Deck deck) {
                 showDeleteConfirmation(deck);
             }
         });
         rvDecks.setLayoutManager(new LinearLayoutManager(getContext()));
         rvDecks.setAdapter(adapter);
+    }
+
+    private void showJoinChallengeDialog() {
+        TextInputLayout inputLayout = new TextInputLayout(requireContext());
+        inputLayout.setPadding(40, 20, 40, 0);
+        TextInputEditText editText = new TextInputEditText(requireContext());
+        editText.setHint("Enter 6-digit code");
+        inputLayout.addView(editText);
+
+        new AlertDialog.Builder(requireContext())
+                .setTitle("Join Study Challenge")
+                .setView(inputLayout)
+                .setPositiveButton("Join", (dialog, which) -> {
+                    if (editText.getText() != null) {
+                        String code = editText.getText().toString().toUpperCase().trim();
+                        if (code.length() == 6) {
+                            joinChallengeByCode(code);
+                        } else {
+                            Toast.makeText(getContext(), "Invalid code", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+    private void joinChallengeByCode(String code) {
+        SupabaseRepo.getChallengeByCode(code, challenge -> {
+            if (getActivity() == null) return;
+            if (challenge != null) {
+                String name = SupabaseAuthHelper.getCurrentUserName();
+                String userName = (name != null) ? name : "Player";
+                
+                Integer cId = challenge.getId();
+                if (cId == null) return;
+                
+                SupabaseRepo.joinChallenge(cId, userName, success -> {
+                    if (success) {
+                        Bundle args = new Bundle();
+                        args.putInt("challengeId", cId);
+                        args.putString("challengeCode", code);
+                        Navigation.findNavController(requireView()).navigate(R.id.challengeWaitingRoomFragment, args);
+                    } else {
+                        Toast.makeText(getContext(), "Failed to join room", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } else {
+                Toast.makeText(getContext(), "Challenge room not found", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void updateUserGreeting() {

@@ -15,6 +15,31 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
+        android:layout_marginBottom="8dp">
+
+        <TextView
+            android:id="@+id/tvChallengeTimer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="05:00"
+            android:textColor="@color/incorrect"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:visibility="gone"/>
+
+        <View android:layout_width="0dp" android:layout_height="0dp" android:layout_weight="1"/>
+
+        <TextView android:id="@+id/tvDeckTitleHeader"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="Software Engineering" android:textSize="12sp"
+            android:textColor="@color/text_secondary" android:textStyle="italic" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
         android:layout_marginBottom="16dp">
         <TextView android:id="@+id/tvQuizCounter"
             android:layout_width="wrap_content" android:layout_height="wrap_content"

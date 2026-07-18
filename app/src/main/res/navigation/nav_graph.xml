@@ -11,6 +11,9 @@
         <action
             android:id="@+id/action_homeFragment_to_deckHistoryFragment"
             app:destination="@id/deckHistoryFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_createChallengeFragment"
+            app:destination="@id/createChallengeFragment" />
     </fragment>
 
     <fragment
@@ -87,5 +90,55 @@
         android:id="@+id/quizReviewFragment"
         android:name="com.yourgroup.studypulseai.ui.history.QuizReviewFragment"
         android:label="Quiz Review" />
+
+    <fragment
+        android:id="@+id/createChallengeFragment"
+        android:name="com.yourgroup.studypulseai.ui.challenge.CreateChallengeFragment"
+        android:label="Create Challenge">
+        <action
+            android:id="@+id/action_createChallengeFragment_to_challengeWaitingRoomFragment"
+            app:destination="@id/challengeWaitingRoomFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/challengeWaitingRoomFragment"
+        android:name="com.yourgroup.studypulseai.ui.challenge.ChallengeWaitingRoomFragment"
+        android:label="Waiting Room">
+        <action
+            android:id="@+id/action_challengeWaitingRoomFragment_to_challengeQuizFragment"
+            app:destination="@id/challengeQuizFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/challengeQuizFragment"
+        android:name="com.yourgroup.studypulseai.ui.challenge.ChallengeQuizFragment"
+        android:label="Challenge Quiz">
+        <action
+            android:id="@+id/action_challengeQuizFragment_to_challengeLeaderboardFragment"
+            app:destination="@id/challengeLeaderboardFragment"
+            app:popUpTo="@id/challengeWaitingRoomFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_challengeQuizFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/challengeLeaderboardFragment"
+        android:name="com.yourgroup.studypulseai.ui.challenge.ChallengeLeaderboardFragment"
+        android:label="Leaderboard">
+        <action
+            android:id="@+id/action_challengeLeaderboardFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/challengeHistoryFragment"
+        android:name="com.yourgroup.studypulseai.ui.challenge.ChallengeHistoryFragment"
+        android:label="Challenge History" />
 
 </navigation>

@@ -27,10 +27,14 @@ public class MainActivity extends AppCompatActivity {
 
         try {
             if (!SupabaseAuthHelper.isLoggedIn()) {
-                Log.d(TAG, "User not logged in, redirecting to WelcomeActivity");
-                startActivity(new Intent(this, WelcomeActivity.class));
-                finish();
-                return;
+                Log.d(TAG, "User not logged in, checking session...");
+                // Double check if it's just a cold start or truly no session
+                if (!SupabaseAuthHelper.isLoggedIn()) {
+                     Log.d(TAG, "Confirmed logged out, redirecting to WelcomeActivity");
+                     startActivity(new Intent(this, WelcomeActivity.class));
+                     finish();
+                     return;
+                }
             }
 
             setContentView(R.layout.activity_main);

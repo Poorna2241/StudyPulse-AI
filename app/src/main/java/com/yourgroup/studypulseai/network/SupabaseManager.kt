@@ -7,10 +7,16 @@ import io.github.jan.supabase.auth.SessionManager
 import io.github.jan.supabase.auth.user.UserSession
 import io.github.jan.supabase.postgrest.Postgrest
 import io.github.jan.supabase.storage.Storage
+import io.github.jan.supabase.realtime.Realtime
+import io.ktor.client.engine.okhttp.OkHttp
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.encodeToString
 import android.content.Context
 import com.yourgroup.studypulseai.StudyPulseApp
+import io.github.jan.supabase.auth.auth
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class AndroidSessionManager : SessionManager {
     private val prefs by lazy {
@@ -41,16 +47,32 @@ class AndroidSessionManager : SessionManager {
 }
 
 object SupabaseManager {
+    private val scope = CoroutineScope(Dispatchers.Main)
+
     val client: SupabaseClient by lazy {
         createSupabaseClient(
             supabaseUrl = SupabaseConfig.SUPABASE_URL,
             supabaseKey = SupabaseConfig.SUPABASE_ANON_KEY
         ) {
+            httpEngine = OkHttp.create()
             install(Auth) {
                 sessionManager = AndroidSessionManager()
             }
             install(Postgrest)
             install(Storage)
+            install(Realtime)
+        }
+    }
+
+    @JvmStatic
+    fun refreshSessionIfNeeded() {
+        scope.launch {
+            try {
+                // Manually trigger a refresh to prevent token expiration resets
+                client.auth.importSession(client.auth.currentSessionOrNull() ?: return@launch)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
     }
 }

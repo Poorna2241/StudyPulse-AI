@@ -26,6 +26,7 @@ public class DeckAdapter extends RecyclerView.Adapter<DeckAdapter.DeckViewHolder
         void onDeckClick(Deck deck);
         void onStudyClick(Deck deck);
         void onQuizClick(Deck deck);
+        void onChallengeClick(Deck deck);
         void onDeleteClick(Deck deck);
     }
 
@@ -79,6 +80,7 @@ public class DeckAdapter extends RecyclerView.Adapter<DeckAdapter.DeckViewHolder
 
         holder.btnStudy.setOnClickListener(v -> listener.onStudyClick(deck));
         holder.btnQuiz.setOnClickListener(v -> listener.onQuizClick(deck));
+        holder.btnChallenge.setOnClickListener(v -> listener.onChallengeClick(deck));
         holder.btnDelete.setOnClickListener(v -> listener.onDeleteClick(deck));
         holder.itemView.setOnClickListener(v -> listener.onDeckClick(deck));
     }
@@ -91,7 +93,7 @@ public class DeckAdapter extends RecyclerView.Adapter<DeckAdapter.DeckViewHolder
     static class DeckViewHolder extends RecyclerView.ViewHolder {
         TextView tvTitle, tvCount;
         ImageView ivBackground;
-        View btnStudy, btnQuiz, btnDelete;
+        View btnStudy, btnQuiz, btnChallenge, btnDelete;
 
         public DeckViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -100,6 +102,7 @@ public class DeckAdapter extends RecyclerView.Adapter<DeckAdapter.DeckViewHolder
             ivBackground = itemView.findViewById(R.id.ivDeckBackground);
             btnStudy = itemView.findViewById(R.id.btnStudy);
             btnQuiz = itemView.findViewById(R.id.btnQuiz);
+            btnChallenge = itemView.findViewById(R.id.btnChallenge);
             btnDelete = itemView.findViewById(R.id.btnDelete);
         }
     }

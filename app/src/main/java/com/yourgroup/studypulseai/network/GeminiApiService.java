@@ -1,5 +1,8 @@
 package com.yourgroup.studypulseai.network;
 
+import android.os.Handler;
+import android.os.Looper;
+
 import com.google.firebase.ai.FirebaseAI;
 import com.google.firebase.ai.GenerativeModel;
 import com.google.firebase.ai.java.GenerativeModelFutures;
@@ -28,6 +31,7 @@ public class GeminiApiService {
     private final GenerativeModelFutures model;
     private final Executor executor = Executors.newSingleThreadExecutor();
     private final ScheduledExecutorService timeoutExecutor = Executors.newSingleThreadScheduledExecutor();
+    private final Handler mainHandler = new Handler(Looper.getMainLooper());
 
     public interface ApiCallback {
         void onSuccess(List<Flashcard> flashcards, List<QuizQuestion> questions);
@@ -35,12 +39,9 @@ public class GeminiApiService {
     }
 
     public GeminiApiService() {
-        // Firebase AI Logic routes auth through your Firebase project config
-        // (google-services.json), not a raw API key bundled in the app.
-        // Make sure Gemini Developer API is enabled for your Firebase project:
-        // Firebase Console -> AI -> AI Logic -> Get started.
+        // Using gemini-2.0-flash (Latest Stable Alias)
         GenerativeModel gm = FirebaseAI.getInstance(GenerativeBackend.googleAI())
-                .generativeModel("gemini-3.1-flash-lite");
+                .generativeModel("gemini-3.1-flash-lite-preview");
         this.model = GenerativeModelFutures.from(gm);
     }
 
@@ -70,9 +71,9 @@ public class GeminiApiService {
         timeoutExecutor.schedule(() -> {
             if (alreadyResolved.compareAndSet(false, true)) {
                 response.cancel(true);
-                callback.onError("Request timed out. Check your internet connection and try again.");
+                mainHandler.post(() -> callback.onError("AI Request timed out. Try again."));
             }
-        }, 60, TimeUnit.SECONDS); // Increased to 60s for potentially larger requests
+        }, 60, TimeUnit.SECONDS);
 
         Futures.addCallback(response, new FutureCallback<GenerateContentResponse>() {
             @Override
@@ -82,7 +83,7 @@ public class GeminiApiService {
                 try {
                     String text = result.getText();
                     if (text == null) {
-                        callback.onError("Gemini returned empty response");
+                        mainHandler.post(() -> callback.onError("Gemini returned empty response"));
                         return;
                     }
 
@@ -110,16 +111,18 @@ public class GeminiApiService {
                                 new TypeToken<List<QuizQuestion>>(){}.getType());
                     }
 
-                    callback.onSuccess(flashcards, questions);
+                    List<Flashcard> finalFlashcards = flashcards;
+                    List<QuizQuestion> finalQuestions = questions;
+                    mainHandler.post(() -> callback.onSuccess(finalFlashcards, finalQuestions));
                 } catch (Exception e) {
-                    callback.onError("Parse error: " + e.getMessage() + "\nResponse: " + result.getText());
+                    mainHandler.post(() -> callback.onError("Parse error: " + e.getMessage()));
                 }
             }
 
             @Override
             public void onFailure(@androidx.annotation.NonNull Throwable t) {
                 if (!alreadyResolved.compareAndSet(false, true)) return;
-                callback.onError("Gemini API error: " + t.getMessage());
+                mainHandler.post(() -> callback.onError("Gemini API error: " + t.getMessage()));
             }
         }, executor);
     }
