@@ -197,15 +197,38 @@ public class HomeFragment extends Fragment {
     }
 
     private void showJoinChallengeDialog() {
+        // Container for better padding in the dialog
+        android.widget.LinearLayout container = new android.widget.LinearLayout(requireContext());
+        container.setOrientation(android.widget.LinearLayout.VERTICAL);
+        int dp24 = (int) (24 * getResources().getDisplayMetrics().density);
+        container.setPadding(dp24, dp24, dp24, 0);
+
+        // Use the standard FilledBox style (default) but ensure hint behavior
         TextInputLayout inputLayout = new TextInputLayout(requireContext());
-        inputLayout.setPadding(40, 20, 40, 0);
+        inputLayout.setHint("Enter 6-digit code");
+        inputLayout.setHintEnabled(true);
+        
         TextInputEditText editText = new TextInputEditText(requireContext());
-        editText.setHint("Enter 6-digit code");
+        editText.setHint(null);
+        // REMOVE INNER EDITTEXT BACKGROUND to fix the "double line" issue
+        // The TextInputLayout already provides the bottom line
+        editText.setBackground(null);
+        
+        // APPLY PRECISE PADDING:
+        // Top padding (40px) to push the code down away from the placeholder
+        // Bottom padding (0) to force the code to sit right on the underline/baseline
+        editText.setPadding(editText.getPaddingLeft(), 80, editText.getPaddingRight(), 0);
+        
+        // Ensure single line and center text for better alignment on the line
+        editText.setSingleLine(true);
+        editText.setGravity(android.view.Gravity.BOTTOM);
+        
         inputLayout.addView(editText);
+        container.addView(inputLayout);
 
         new AlertDialog.Builder(requireContext())
                 .setTitle("Join Study Challenge")
-                .setView(inputLayout)
+                .setView(container)
                 .setPositiveButton("Join", (dialog, which) -> {
                     if (editText.getText() != null) {
                         String code = editText.getText().toString().toUpperCase().trim();
